@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+include ':ParseStarterProject'
+=======
+include ':app'
+>>>>>>> 5a687b93b065cd041ea13ea5c299951243315a2e
