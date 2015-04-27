@@ -63,15 +63,15 @@ public class Direction {
     		JSONObject leg = legs.getJSONObject(i);
     		JSONArray steps = leg.getJSONArray("steps");
     		for(int j=0;j<steps.length();j++){
-    			Point pt = new Point();    			
-    			pt.setLat(steps.getJSONObject(j).getJSONObject("start_location").getDouble("lat"));
-    			pt.setLng(steps.getJSONObject(j).getJSONObject("start_location").getDouble("lng"));
+    			Point pt = new Point(steps.getJSONObject(j).getJSONObject("start_location").getDouble("lat"),steps.getJSONObject(j).getJSONObject("start_location").getDouble("lng") );    			
     			path.add(pt);
     		}
-    		Point dst = new Point();
-        	dst.setLat(leg.getJSONObject("end_location").getDouble("lat"));
-        	dst.setLng(leg.getJSONObject("end_location").getDouble("lng"));
+    		Point dst = new Point(leg.getJSONObject("end_location").getDouble("lat"),leg.getJSONObject("end_location").getDouble("lng"));
+        	path.add(dst);
     	} 
+    	for(int i = 0 ; i<path.size(); i++){
+    		System.out.println(path.get(i).getLat()+", "+path.get(i).getLng());
+    	}
     	
     	return path;    	
     }
@@ -103,5 +103,12 @@ public class Direction {
 
         String jsonPath = response.toString();
         return parsePath(jsonPath);
+    }
+    
+    public static void main(String[] args) throws MalformedURLException, IOException, JSONException{
+    	Direction obj = new Direction();
+    	obj.getPath("1683 Shoreview Avenue, San mateo CA - 94401", "100 Oracle Parkway, Redwood Shores, CA - 94064");
+    	System.out.println("NEW");
+    	obj.getPath("San Francisco", "100 Oracle Parkway, Redwood Shores, CA - 94064");
     }
 }

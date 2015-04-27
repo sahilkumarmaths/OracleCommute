@@ -4,7 +4,17 @@ public class Point {
 	private Double lat;
 	private Double lng;
 
-    public Double getLat() {
+    public Point(Double lat, Double lng) {
+		super();
+		this.lat = lat;
+		this.lng = lng;
+	}
+
+	public Point() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Double getLat() {
         return lat;
     }
 
