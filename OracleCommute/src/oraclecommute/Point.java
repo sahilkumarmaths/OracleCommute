@@ -1,19 +1,23 @@
 package oraclecommute;
 
 public class Point {
-	private Double x;
-	private Double y;
-	public Double getX() {
-		return x;
-	}
-	public void setX(Double x) {
-		this.x = x;
-	}
-	public Double getY() {
-		return y;
-	}
-	public void setY(Double y) {
-		this.y = y;
-	}
-	
+	private Double lat;
+	private Double lng;
+
+    public Double getLat() {
+        return lat;
+    }
+
+    public void setLat(Double lat) {
+        this.lat = lat;
+    }
+
+    public Double getLng() {
+        return lng;
+    }
+
+    public void setLng(Double lng) {
+        this.lng = lng;
+    }
+ 
 }
