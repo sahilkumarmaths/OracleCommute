@@ -39,7 +39,7 @@ public class Group {
 				}
 			}			
 		}
-		Integer candidateGroupId = Util.getBestCandidate(paths, groupIds, candidateIds);
+		//Integer candidateGroupId = Util.getBestCandidate(paths, groupIds, ,home);
 		
 		//Update DB
 	}

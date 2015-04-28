@@ -118,11 +118,29 @@ public class Util {
 	       return true; 
 	   }
 	   
-	   public static Integer getBestCandidate(ArrayList<ArrayList<Point>> paths, ArrayList<Integer> groupIds, ArrayList<Integer> candidateIds){
-			Integer bestCandidateId = 0;
-			
-			return bestCandidateId;
-		}
+	   public static Integer getBestCandidate(ArrayList<ArrayList<Point>> paths, ArrayList<Integer> groupIds, ArrayList<Integer> candidateIds, Point cur)
+           {
+               if(paths.size() > 0)
+               {
+                    Integer index = 0;
+                    
+                    Double min_dist = Util.distance(paths.get(0).get(0), cur);
+                    Double temp = 0.0;
+                    for(int i = 1; i < paths.size(); i++)
+                    {
+                        temp = Util.distance(paths.get(i).get(0), cur);
+                        if (temp < min_dist )
+                        {
+                            index = i;
+                            min_dist = temp;
+                        }
+                    }
+                    return index;
+               }else
+               {
+                   return -1;
+               } 
+	   }
 		
 		public static Boolean checkDiversion(Point start, Point end, Point home){
 			Boolean isOkay = true;
