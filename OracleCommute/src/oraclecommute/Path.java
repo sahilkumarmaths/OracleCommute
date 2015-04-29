@@ -11,6 +11,8 @@ public class Path {
 	public ArrayList<Point> findPath(Integer groupId) throws MalformedURLException, IOException, JSONException{
 		//read locations from DB
 		ArrayList<Point> locations = new ArrayList<Point>();
+		DbUtil obj = new DbUtil();
+		locations = obj.getGroupEmployeeLocations(groupId);
 		ArrayList<Point> path = new ArrayList<Point>();
 		int[] used = new int[locations.size()];
 		for(int i=0; i<used.length;i++){
