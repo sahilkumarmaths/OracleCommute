@@ -58,6 +58,13 @@ public class DbUtil {
 		      "     i_group_id => ?,                                                \n"   +
 		      "     i_path => ?);                                     \n"   +
 		      "END; ";
+        
+         String GETHOME = "BEGIN                                   \n"   +
+		      "     commute_employee.getEmployeeLocation (     \n"   +
+		      "     i_id  => ?,                                \n"   +
+		      "     o_coordx => ?,                             \n"   +        
+		      "     o_coordy => ?                              \n"   +
+		      "); END; ";
 	
 	public void createEmployee(Employee emp)
 	{	
@@ -240,19 +247,14 @@ public class DbUtil {
 			 exp.printStackTrace();
 		 }
 		 finally
-		 {
-			 
-			 
+		 { 
 		 }
 		
 	}
             
-            String GETHOME = "BEGIN                                   \n"   +
-		      "     commute_employee.getEmployeeLocation (     \n"   +
-		      "     i_id  => ?,                                \n"   +
-		      "     o_coordx => ?,                             \n"   +        
-		      "     o_coordy => ?                              \n"   +
-		      "); END; ";
+        public Point getHome(Integer empid)
+        {
+            Point home = new Point();
             try
             {
                 Connection conn = this.getConnection();
@@ -269,6 +271,7 @@ public class DbUtil {
             }
             return home;
         }
+
 	public Connection getConnection()
 	{
                 Connection conn = null; 
