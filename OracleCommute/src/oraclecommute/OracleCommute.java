@@ -21,12 +21,8 @@ public class OracleCommute {
      */
     public static void main(String[] args) {
        DbUtil obj = new DbUtil();
-       List <Group > abc = obj.getAllGroup();
+       System.out.println(obj.assignGroup(3.0,4.0));
        
-       for(Group gp : abc)
-       {
-           System.out.println(gp.getDriver_id());
-       }
       // System.out.println(a.getLat() + " " + a.getLng());
     }
     

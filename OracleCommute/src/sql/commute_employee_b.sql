@@ -67,6 +67,13 @@ IS
 BEGIN
     open o_paths FOR SELECT * FROM group_attr ORDER BY g_id ;
 END;
+
+procedure assignGroup(i_gid  IN NUMBER, i_id IN NUMBER)
+IS 
+BEGIN
+    INSERT INTO emp_group(g_id,emp_id) VALUES(i_gid, i_id);
+    COMMIT;
+END;
 end;
 /
 commit;

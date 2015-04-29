@@ -87,7 +87,11 @@ public class Group
 				}
 			}			
 		}
-		//Integer candidateGroupId = Util.getBestCandidate(paths, groupIds, ,home);
+                Integer candidateGroupId = Util.getBestCandidate(paths, groupIds, candidateIds, home);
+                Path.findPath(candidateGroupId);
+                
+                
+                
 		
 		//Update DB
 	}

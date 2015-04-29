@@ -27,7 +27,9 @@ procedure retrieveEmployees(o_employees OUT NOCOPY SYS_REFCURSOR);
 
 procedure getEmployeeLocation(i_id varchar2, o_coordx OUT varchar2, o_coordy OUT varchar2);
 
-procedure getGroupPaths(o_paths OUT NOCOPY SYS_REFCURSOR);		 
+procedure getGroupPaths(o_paths OUT NOCOPY SYS_REFCURSOR);
+		 
+procedure assignGroup(i_gid  IN NUMBER, i_id IN NUMBER);
 end;
 /
 commit;

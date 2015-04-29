@@ -211,54 +211,27 @@ public class DbUtil
 		
 	}
 	
-	public static void main(String args[])
-	{
-		
-		
-	/*	SimpleDateFormat dateFormat = new SimpleDateFormat(
-				"yyyy-MM-dd hh:mm:ss");
-
-		java.util.Date parsedTimeStamp = null;
-		try {
-			parsedTimeStamp = dateFormat.parse("2014-08-22 15:02:51");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		Timestamp timestamp = new Timestamp(parsedTimeStamp.getTime());
-		
-        
-        // create a java calendar instance
-        Calendar calendar = Calendar.getInstance();
-         
-        // get a java date (java.util.Date) from the Calendar instance.
-        // this java date will represent the current date, or "now".
-        java.util.Date currentDate = calendar.getTime();
-         
-        // now, create a java.sql.Date from the java.util.Date
-        Timestamp home_departure = new Timestamp(currentDate.getTime());
-		
-        Employee emp = new Employee();
-        emp.setUsername("username");
-        emp.setPassword("password");
-        emp.setAddress("address");
-        emp.setCoordx(123.0);
-        emp.setCoordy(123.0);
-
-        emp.setEmail("email");
-        emp.setName("name");
-        emp.setPhone(123.0);
-        emp.setHome_departure(timestamp);
-        emp.setOffice_departure(timestamp);
-        emp.setIs_driver(true); */
-		
-
-
-        DbUtil db = new DbUtil();
-        //db.createEmployee(emp);
-        db.retreiveEmployees();
-	}
-	
+    public boolean assignGroup(Double gid, Double empId)
+    {
+        String assignQuery = "BEGIN                                   \n"   +
+                  "     commute_employee.assignGroup (     \n"   +
+                  "     i_gid  => ?,                                \n"   +
+                  "     i_id => ?                             \n"   +        
+                  "); END; ";
+        try
+        {
+            Connection conn = this.getConnection();
+            OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(assignQuery);
+            cstmt.setDouble(1, gid);
+            cstmt.setDouble(2, empId);
+            cstmt.execute();
+            conn.close();
+            return true;
+        } catch (SQLException e) 
+        {
+            e.printStackTrace();
+            return false;
+        }   
+    }
 	
 }
