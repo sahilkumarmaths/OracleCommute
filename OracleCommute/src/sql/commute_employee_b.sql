@@ -47,6 +47,13 @@ BEGIN
 END;
 
 
+procedure retrieveEmployees(o_employees OUT NOCOPY SYS_REFCURSOR)
+IS
+BEGIN
+	open o_employees FOR
+		select * from employee;
+
+END;
 
 end;
 /

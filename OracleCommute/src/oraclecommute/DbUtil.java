@@ -13,8 +13,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.sql.Types;
 
-
+import oracle.jdbc.OracleCallableStatement;
+import oracle.jdbc.OracleTypes;
+import oracle.jdbc.OracleResultSet;
 
 public class DbUtil {
 
@@ -35,15 +39,16 @@ public class DbUtil {
 		      "     i_is_driver => ?);                                     \n"   +
 		      "END; ";
 			
-	
+	String RETRIEVE_EMPLOYEES = "BEGIN  \n" +
+				"  commute_employee.retrieveEmployees (                 \n"   +
+				"  		o_employees => ?); \n" +
+				 "END; ";
+
 	public void createEmployee(Employee emp)
 	{
 		
 	 try
-	 {
-                 
-             
-             
+	 {     
 		 conn = this.getConnection();
 		 CallableStatement cstmt = conn.prepareCall(CREATE_EMPLOYEE);
 			
@@ -60,16 +65,71 @@ public class DbUtil {
         cstmt.setTimestamp(10, emp.getOffice_departure());
 		cstmt.setString(11, emp.isIs_driver()? "Y":"N");
 		cstmt.executeUpdate();
-		 
+		conn.commit();
+		conn.close(); 
 	 }
 	 catch(Exception exp)
 	 {
 		 exp.printStackTrace();
 	 }
+	 finally
+	 {
+		 
+		 
+	 }
 		
 		
 		
 	}
+	
+	
+	public ArrayList<Employee> retreiveEmployees()
+	{
+		
+		 ArrayList<Employee> empList = new ArrayList<Employee>();
+		 try {
+			 
+			
+			 conn = this.getConnection();
+			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(RETRIEVE_EMPLOYEES);
+			 cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+			 cstmt.execute();
+			 OracleResultSet rs = (OracleResultSet)cstmt.getCursor(1);
+			 while (rs.next()) {
+				 	
+				 Employee emp = new Employee();
+				 emp.setUsername(rs.getString("username"));
+				 emp.setPassword(rs.getString("passwd"));
+				 emp.setCoordx(rs.getDouble("coordx"));
+				 emp.setCoordy(rs.getDouble("coordy"));
+				 emp.setEmail(rs.getString("email"));
+				 emp.setAddress(rs.getString("address"));
+				 emp.setHome_departure(rs.getTimestamp("home_departure"));
+				 emp.setOffice_departure(rs.getTimestamp("office_departure"));
+				 emp.setIs_driver("Y".equals(rs.getString("is_driver"))? true:false);
+				 emp.setPhone(rs.getDouble("phno"));
+				 emp.setName(rs.getString("name"));
+				 empList.add(emp);
+
+		        }
+			 
+			 
+			 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
+		return empList;
+		
+	}
+	
+	public void updateEmployee(String username, HashMap<String,String> attributes)
+	{
+		
+	}
+	
+	
 	
 	public Connection getConnection()
 	{
@@ -106,7 +166,7 @@ public class DbUtil {
 	{
 		
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat(
+	/*	SimpleDateFormat dateFormat = new SimpleDateFormat(
 				"yyyy-MM-dd hh:mm:ss");
 
 		java.util.Date parsedTimeStamp = null;
@@ -142,11 +202,13 @@ public class DbUtil {
         emp.setPhone(123.0);
         emp.setHome_departure(timestamp);
         emp.setOffice_departure(timestamp);
-        emp.setIs_driver(true);
+        emp.setIs_driver(true); */
+		
 
 
         DbUtil db = new DbUtil();
-        db.createEmployee(emp);
+        //db.createEmployee(emp);
+        db.retreiveEmployees();
 	}
 	
 	

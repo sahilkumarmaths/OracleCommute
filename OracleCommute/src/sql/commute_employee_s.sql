@@ -20,6 +20,9 @@ procedure createEmployee(i_username varchar2,
 			 i_home_departure TIMESTAMP,
 			 i_office_departure TIMESTAMP,
 			 i_is_driver 	  varchar2);
+
+
+procedure retrieveEmployees(o_employees OUT NOCOPY SYS_REFCURSOR);
 		       
 end;
 /
