@@ -46,6 +46,8 @@ PROCEDURE getVacantGroups(o_vacant_grp OUT NOCOPY SYS_REFCURSOR);
 		    
 
 PROCEDURE insertGroup(gr_id IN NUMBER, em_id IN NUMBER);
+
+PROCEDURE insertGroupAttr();
 end;
 /
 commit;

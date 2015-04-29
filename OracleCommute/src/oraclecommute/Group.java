@@ -98,6 +98,12 @@ public class Group
                 if(intersectingRiders.size() != 0)
                 {
                     // we can form a group happy
+                    //create a new group
+                    //add riders and driver to the group (insertgroup)
+                    //call findpath
+                    //write the path
+                    
+                    
                     for()
                     {
                      
