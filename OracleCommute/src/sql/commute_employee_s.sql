@@ -38,7 +38,14 @@ PROCEDURE get_grp_empl_locations(
 PROCEDURE write_path(
 i_group_id NUMBER,
 i_path VARCHAR2);
-		       
+
+-- this 
+PROCEDURE getAllEmpNotAssigned(o_emp_cur OUT NOCOPY SYS_REFCURSOR);
+_
+PROCEDURE getVacantGroups(o_vacant_grp OUT NOCOPY SYS_REFCURSOR);
+		    
+
+PROCEDURE insertGroup(gr_id IN NUMBER, em_id IN NUMBER);
 end;
 /
 commit;

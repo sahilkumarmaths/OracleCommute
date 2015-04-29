@@ -93,7 +93,7 @@ public class Direction {
     	return distance;    	
     }
 	
-    public static List<Point> getPath(String start, String end) throws MalformedURLException, IOException, JSONException
+    public List<Point> getPath(String start, String end) throws MalformedURLException, IOException, JSONException
     {
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 

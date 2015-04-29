@@ -18,6 +18,15 @@ public class Employee {
     private Timestamp home_departure;
     private Timestamp office_departure;
     private boolean is_driver;
+    private boolean is_assigned_grp;
+
+    public boolean isIs_assigned_grp() {
+        return is_assigned_grp;
+    }
+
+    public void setIs_assigned_grp(boolean is_assigned_grp) {
+        this.is_assigned_grp = is_assigned_grp;
+    }
 
 
     public void setPhone(Double phone) {

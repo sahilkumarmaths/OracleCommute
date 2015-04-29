@@ -42,6 +42,8 @@ public class DbUtil {
 		      "     i_is_driver => ?);                                     \n"   +
 		      "END; ";
 			
+        
+       
 	String RETRIEVE_EMPLOYEES = "BEGIN  \n" +
 				"  commute_employee.retrieveEmployees (                 \n"   +
 				"  		o_employees => ?); \n" +
@@ -121,6 +123,7 @@ public class DbUtil {
                     gp.setG_id(rs.getDouble("g_id"));
                     gp.setPath(rs.getString("path"));
                     gp.setStart_time(rs.getDATE("start_time").toString());
+                    gp.setSize(rs.getDouble("size"));
                     groups.add(gp);
                } 
                conn.close(); 
@@ -272,6 +275,37 @@ public class DbUtil {
             return home;
         }
 
+        
+        public void insertGroup(Double g_id, Double emp_id)
+        {
+             String INSERT_GROUP = "BEGIN                                                         \n"   +
+		      "  commute_employee.insertGroup (                 \n"   +
+		      "     gr_id => ?,                                                \n"   +
+		      "     em_id=> ?);                                  \n"   +        
+		      "END; ";
+             
+            try{
+             
+                 conn = this.getConnection();
+		 CallableStatement cstmt = conn.prepareCall(INSERT_GROUP);
+			
+                 
+                cstmt.setDouble(1, g_id);
+                cstmt.setDouble(2, emp_id);
+                cstmt.executeUpdate();
+
+                conn.close(); 
+                
+                //assignEmployee(emp);
+                // TODO
+	 }
+	 catch(Exception exp)
+	 {
+		 exp.printStackTrace();
+	 }
+             
+            
+        }
 	public Connection getConnection()
 	{
                 Connection conn = null; 
@@ -291,7 +325,6 @@ public class DbUtil {
 			System.out.println("Connection Failed! Check output console");
 			e.printStackTrace();
 			return null;
- 
 		} 
 		
 		if (conn != null) {
@@ -326,5 +359,84 @@ public class DbUtil {
             return false;
         }   
     }
+    
+    
+    public List<Employee> getAllEmpNotAssigned()
+    {
+       String getEmpQuery = "BEGIN                                   \n"   +
+                  "     commute_employee.getAllEmpNotAssigned (     \n"   +
+                  "     o_emp_cur  => ?                                \n" +
+                  "); END; ";
+       
+        List<Employee> getAllEmp = new LinkedList<Employee>();
+        try
+        {
+            Connection conn = this.getConnection();
+            OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(getEmpQuery);
+            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.execute();
+            OracleResultSet rs = (OracleResultSet)cstmt.getResultSet();
+            
+            while(rs.next())
+            {
+                Employee emp = new Employee();
+                emp.setUsername(rs.getString("username"));
+                emp.setPassword(rs.getString("passwd"));
+                emp.setCoordx(rs.getDouble("coordx"));
+                emp.setCoordy(rs.getDouble("coordy"));
+                emp.setEmail(rs.getString("email"));
+                emp.setAddress(rs.getString("address"));
+                emp.setHome_departure(rs.getTimestamp("home_departure"));
+                emp.setOffice_departure(rs.getTimestamp("office_departure"));
+                emp.setIs_driver("Y".equals(rs.getString("is_driver"))? true:false);
+                emp.setPhone(rs.getDouble("phno"));
+                emp.setName(rs.getString("name"));
+                emp.setIs_assigned_grp("Y".equals(rs.getString("is_grp_assigned")) ? true:false);
+                getAllEmp.add(emp);
+            }
+            conn.close();
+            
+        } catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }    
+        return getAllEmp;
+    }
+    
+    public List<Group> getVacantGroups()
+    {
+        String queryVacantGroup = "BEGIN                                   \n"   +
+                  "     commute_employee.getVacantGroups (     \n"   +
+                  "     o_vacant_grp  => ?                                \n" +
+                  "); END; ";
+       
+        List<Group> grps = new LinkedList<Group>();
+        try
+        {
+            Connection conn = this.getConnection();
+            OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(queryVacantGroup);
+            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+            cstmt.execute();
+            OracleResultSet rs = (OracleResultSet)cstmt.getResultSet();
+            
+            while(rs.next())
+            {
+                Group gp = new Group();
+                gp.setDriver_id(rs.getDouble("driver_id"));
+                gp.setG_id(rs.getDouble("g_id"));
+                gp.setPath(rs.getString("path"));
+                gp.setStart_time(rs.getDATE("start_time").toString());
+                gp.setSize(rs.getDouble("size"));
+                grps.add(gp);
+            }
+            conn.close();
+            
+        } catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }    
+        return grps;
+    }
+
 	
 }

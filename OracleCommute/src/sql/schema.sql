@@ -11,7 +11,8 @@ CREATE TABLE employee
     email VARCHAR2(64),
     home_departure TIMESTAMP(6),
     office_departure TIMESTAMP(6),
-    is_driver VARCHAR2(1 CHAR)
+    is_driver VARCHAR2(1 CHAR),
+    is_grp_assigned VARCHAR2(1 CHAR)
 );
 
 
@@ -35,7 +36,8 @@ CREATE TABLE group_attr
     g_id NUMBER,
     path VARCHAR2(1024), 
     start_time DATE,
-    driver_id NUMBER
+    driver_id NUMBER,
+    size NUMBER
 );
 
 alter table group_attr add constraint group_attr_fk foreign key (g_id) references emp_group(g_id) ON DELETE CASCADE;

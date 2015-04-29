@@ -98,6 +98,26 @@ BEGIN
 	WHERE g_id = i_group_id;
 END;	
 
+PROCEDURE getAllEmpNotAssigned(o_emp_cur OUT NOCOPY SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN o_emp_cur FOR SELECT * from employee WHERE is_grp_assigned = 'N';
+END;
+
+
+PROCEDURE getVacantGroups(o_vacant_grp OUT NOCOPY SYS_REFCURSOR)
+IS
+BEGIN
+    OPEN o_vacant_grp FOR SELECT * FROM group_attr WHERE size < '5';
+END;
+
+PROCEDURE insertGroup(gr_id IN NUMBER, em_id IN NUMBER)
+IS
+BEGIN
+    INSERT INTO employee (g_id, emp_id) values(gr_id, em_id);
+    commit;
+END;
+
 
 end;
 /
