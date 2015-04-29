@@ -1,3 +1,4 @@
+ALTER SESSION SET CURRENT_SCHEMA=COMMUTE;
 create or replace package body commute_employee
 AS
 
@@ -55,6 +56,17 @@ BEGIN
 
 END;
 
+procedure getEmployeeLocation(i_id varchar2, o_coordx OUT varchar2, o_coordy OUT varchar2)
+IS
+BEGIN
+    SELECT coordx , coordy INTO o_coordx, o_coordy FROM employee WHERE  emp_id = i_id;
+END;
+
+procedure getGroupPaths(o_paths OUT NOCOPY SYS_REFCURSOR)
+IS 
+BEGIN
+    open o_paths FOR SELECT * FROM group_attr ORDER BY g_id ;
+END;
 end;
 /
 commit;

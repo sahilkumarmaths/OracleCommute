@@ -1,3 +1,4 @@
+ALTER SESSION SET CURRENT_SCHEMA=COMMUTE;
 SET ECHO ON
 SET FEEDBACK 1
 SET NUMWIDTH 10
@@ -23,7 +24,10 @@ procedure createEmployee(i_username varchar2,
 
 
 procedure retrieveEmployees(o_employees OUT NOCOPY SYS_REFCURSOR);
-		       
+
+procedure getEmployeeLocation(i_id varchar2, o_coordx OUT varchar2, o_coordy OUT varchar2);
+
+procedure getGroupPaths(o_paths OUT NOCOPY SYS_REFCURSOR);		 
 end;
 /
 commit;

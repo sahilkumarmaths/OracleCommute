@@ -5,26 +5,20 @@ package oraclecommute;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.sql.Types;
+import java.util.LinkedList;
+import java.util.List;
 
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleTypes;
 import oracle.jdbc.OracleResultSet;
 
-public class DbUtil {
-
-	Connection conn = null;
-	
-	String CREATE_EMPLOYEE = "BEGIN                                                         \n"   +
+public class DbUtil 
+{	
+    String CREATE_EMPLOYEE = "BEGIN                             \n"   +
 		      "  commute_employee.createEmployee (                 \n"   +
 		      "     i_username => ?,                                                \n"   +
 		      "     i_password => ?,                                  \n"   +        
@@ -39,17 +33,21 @@ public class DbUtil {
 		      "     i_is_driver => ?);                                     \n"   +
 		      "END; ";
 			
-	String RETRIEVE_EMPLOYEES = "BEGIN  \n" +
-				"  commute_employee.retrieveEmployees (                 \n"   +
-				"  		o_employees => ?); \n" +
-				 "END; ";
-
+    String RETRIEVE_EMPLOYEES = "BEGIN  \n" +
+                            "  commute_employee.retrieveEmployees (                 \n"   +
+                            "  		o_employees => ?); \n" +
+                             "END; ";
+        // New Employee
+        // Db data
+        // Group Assign
+        // Group data in db
+        // 
 	public void createEmployee(Employee emp)
-	{
-		
+	{	
+         Connection conn = null; 
 	 try
 	 {     
-		 conn = this.getConnection();
+                conn = this.getConnection();
 		 CallableStatement cstmt = conn.prepareCall(CREATE_EMPLOYEE);
 			
 			
@@ -62,34 +60,60 @@ public class DbUtil {
 		cstmt.setString(7, emp.getAddress());
 		cstmt.setString(8, emp.getEmail());
 		cstmt.setTimestamp(9, emp.getHome_departure());
-        cstmt.setTimestamp(10, emp.getOffice_departure());
+                cstmt.setTimestamp(10, emp.getOffice_departure());
 		cstmt.setString(11, emp.isIs_driver()? "Y":"N");
 		cstmt.executeUpdate();
 		conn.commit();
-		conn.close(); 
+                conn.close(); 
+                
+                //assignEmployee(emp);
+                // TODO
 	 }
 	 catch(Exception exp)
 	 {
 		 exp.printStackTrace();
 	 }
-	 finally
-	 {
-		 
-		 
-	 }
-		
-		
 		
 	}
-	
+        public List<Group> getAllGroup()
+        {
+            String RETRIEVE_PATHS = "BEGIN                      \n" +
+                    "  commute_employee.getGroupPaths (         \n" +
+                    "  		o_paths => ?);                  \n" +
+                    "END; ";
+            List<Group> groups = new LinkedList<Group>();
+             Connection conn = this.getConnection();
+            try
+            {
+                OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(RETRIEVE_PATHS);
+                cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+                cstmt.execute();
+                OracleResultSet rs = (OracleResultSet)cstmt.getCursor(1);
+                while (rs.next()) 
+                {
+
+                    Group gp = new Group();
+                    gp.setDriver_id(rs.getDouble("driver_id"));
+                    gp.setG_id(rs.getDouble("g_id"));
+                    gp.setPath(rs.getString("path"));
+                    gp.setStart_time(rs.getDATE("start_time").toString());
+                    groups.add(gp);
+               } 
+               conn.close(); 
+            } catch (SQLException e) 
+            {
+                e.printStackTrace();
+            }
+            
+            return groups;
+        }
 	
 	public ArrayList<Employee> retreiveEmployees()
 	{
 		
 		 ArrayList<Employee> empList = new ArrayList<Employee>();
 		 try {
-			 
-			
+			 Connection conn = null;  
 			 conn = this.getConnection();
 			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(RETRIEVE_EMPLOYEES);
 			 cstmt.registerOutParameter(1, OracleTypes.CURSOR);
@@ -129,10 +153,35 @@ public class DbUtil {
 		
 	}
 	
-	
-	
+        public Point getHome(Integer empid)
+        {
+            Point home = new Point();
+            
+            String GETHOME = "BEGIN                                   \n"   +
+		      "     commute_employee.getEmployeeLocation (     \n"   +
+		      "     i_id  => ?,                                \n"   +
+		      "     o_coordx => ?,                             \n"   +        
+		      "     o_coordy => ?                              \n"   +
+		      "); END; ";
+            try
+            {
+                Connection conn = this.getConnection();
+                OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(GETHOME);
+                cstmt.setInt(1, empid);
+                cstmt.registerOutParameter(2, OracleTypes.NUMBER);
+                cstmt.registerOutParameter(3, OracleTypes.NUMBER);
+                cstmt.execute();
+                home.setLat(cstmt.getDouble(2));
+                home.setLng(cstmt.getDouble(3));
+            } catch (SQLException e) 
+            {
+                e.printStackTrace();
+            }
+            return home;
+        }
 	public Connection getConnection()
 	{
+                Connection conn = null; 
 		
 		try {
 			
@@ -150,7 +199,7 @@ public class DbUtil {
 			e.printStackTrace();
 			return null;
  
-		}
+		} 
 		
 		if (conn != null) {
 			System.out.println("You made it, take control your database now!");

@@ -20,7 +20,14 @@ public class OracleCommute {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+       DbUtil obj = new DbUtil();
+       List <Group > abc = obj.getAllGroup();
+       
+       for(Group gp : abc)
+       {
+           System.out.println(gp.getDriver_id());
+       }
+      // System.out.println(a.getLat() + " " + a.getLng());
     }
     
     
