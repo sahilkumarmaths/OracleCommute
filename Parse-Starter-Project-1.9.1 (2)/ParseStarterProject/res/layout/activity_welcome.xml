@@ -1,29 +1,93 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <TextView
-        android:id="@+id/txtwelcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/Welcome"
-        android:paddingTop="50dp"
-        android:textSize="25sp" />
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.parse.starter.Welcome">
 
     <TextView
         android:id="@+id/txtuser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/txtwelcome"
         android:layout_centerHorizontal="true" />
 
     <Button
         android:id="@+id/logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/LogoutBtn" />
+        android:text="@string/LogoutBtn"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/fullName"
+        android:hint="Name"
+        android:layout_below="@+id/txtuser"
+        android:layout_toLeftOf="@+id/logout"
+        android:layout_toStartOf="@+id/logout" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:ems="10"
+        android:id="@+id/phoneNumber"
+        android:hint="XXX-XXX-XXXX"
+        android:layout_below="@+id/fullName"
+        android:layout_alignLeft="@+id/fullName"
+        android:layout_alignStart="@+id/fullName"
+        android:layout_marginTop="30dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPostalAddress"
+        android:ems="10"
+        android:id="@+id/address"
+        android:hint="address"
+        android:layout_below="@+id/phoneNumber"
+        android:layout_alignLeft="@+id/phoneNumber"
+        android:layout_alignStart="@+id/phoneNumber"
+        android:layout_marginTop="32dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:id="@+id/depTo"
+        android:hint="To Oracle"
+        android:layout_below="@+id/address"
+        android:layout_alignLeft="@+id/address"
+        android:layout_alignStart="@+id/address"
+        android:layout_marginTop="37dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="time"
+        android:ems="10"
+        android:id="@+id/depFrom"
+        android:hint="From Oracle"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/depTo"
+        android:layout_alignLeft="@+id/depTo"
+        android:layout_alignStart="@+id/depTo" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save Profile"
+        android:id="@+id/save"
+        android:layout_marginTop="34dp"
+        android:layout_below="@+id/depFrom"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -1,5 +1,7 @@
 package oraclecommute;
 
+import java.sql.Timestamp;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -8,20 +10,21 @@ public class Employee {
     private String name;
     private String username;
     private String password;
-    private String coordx;
-    private String coordy;
-    private String phone;
+    private Double coordx;
+    private Double coordy;
+    private Double phone;
     private String address;
     private String email;
-    private String time_departure;
+    private Timestamp home_departure;
+    private Timestamp office_departure;
     private boolean is_driver;
 
 
-    public void setPhone(String phone) {
+    public void setPhone(Double phone) {
         this.phone = phone;
     }
 
-    public String getPhone() {
+    public Double getPhone() {
         return phone;
     }
 
@@ -39,14 +42,6 @@ public class Employee {
 
     public String getEmail() {
         return email;
-    }
-
-    public void setTime_departure(String time_departure) {
-        this.time_departure = time_departure;
-    }
-
-    public String getTime_departure() {
-        return time_departure;
     }
 
     public void setIs_driver(boolean is_driver) {
@@ -86,19 +81,19 @@ public class Employee {
         return password;
     }
 
-    public void setCoordx(String coordx) {
+    public void setCoordx(Double coordx) {
         this.coordx = coordx;
     }
 
-    public String getCoordx() {
+    public Double getCoordx() {
         return coordx;
     }
 
-    public void setCoordy(String coordy) {
+    public void setCoordy(Double coordy) {
         this.coordy = coordy;
     }
 
-    public String getCoordy() {
+    public Double getCoordy() {
         return coordy;
     }
     
@@ -106,5 +101,21 @@ public class Employee {
         String empXml = "<name>"+getName()+"</name>"+"\n";
         return empXml;
         }
+
+	public Timestamp getOffice_departure() {
+		return office_departure;
+	}
+
+	public void setOffice_departure(Timestamp office_departure) {
+		this.office_departure = office_departure;
+	}
+
+	public Timestamp getHome_departure() {
+		return home_departure;
+	}
+
+	public void setHome_departure(Timestamp home_departure) {
+		this.home_departure = home_departure;
+	}
   
 }
