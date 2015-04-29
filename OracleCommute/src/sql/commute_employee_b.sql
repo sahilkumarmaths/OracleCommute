@@ -66,6 +66,8 @@ procedure getGroupPaths(o_paths OUT NOCOPY SYS_REFCURSOR)
 IS 
 BEGIN
     open o_paths FOR SELECT * FROM group_attr ORDER BY g_id ;
+END;
+ 
 PROCEDURE get_grp_empl_locations(
 	i_group_id NUMBER,
 	o_locations OUT NOCOPY SYS_REFCURSOR)
@@ -74,10 +76,8 @@ BEGIN
 	OPEN o_locations FOR
 		SELECT coordx, coordy FROM
 		employee emp,
-		emp_grp grp
+		emp_group grp
 		WHERE g_id = i_group_id;
-END;
-
 END;
 
 procedure assignGroup(i_gid  IN NUMBER, i_id IN NUMBER)
@@ -86,6 +86,8 @@ BEGIN
     INSERT INTO emp_group(g_id,emp_id) VALUES(i_gid, i_id);
     COMMIT;
 END;
+
+
 PROCEDURE write_path(
 i_group_id NUMBER,
 i_path VARCHAR2)
