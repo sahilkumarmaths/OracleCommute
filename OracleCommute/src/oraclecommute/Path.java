@@ -8,7 +8,7 @@ import org.json.JSONException;
 
 public class Path {
 	
-	public ArrayList<Point> findPath(Integer groupId) throws MalformedURLException, IOException, JSONException{
+	public void findPath(Integer groupId) throws MalformedURLException, IOException, JSONException{
 		//read locations from DB
 		ArrayList<Point> locations = new ArrayList<Point>();
 		DbUtil obj = new DbUtil();
@@ -39,7 +39,7 @@ public class Path {
 			path.add(locations.get(nxt_idx));
 			i++;
 		}		
-		return path;
+		String path_str = Util.pathListToString(path);
 	}
 
 }

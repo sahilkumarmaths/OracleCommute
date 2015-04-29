@@ -160,7 +160,7 @@ public class Util {
 			return isOkay;
 		}
 		
-		public ArrayList<Point> pathStringToList(String path){
+		public static ArrayList<Point> pathStringToList(String path){
 			ArrayList<Point> locations = new ArrayList<Point>();
 			List<String> items = Arrays.asList(path.split("\\s*,\\s*"));
 			
@@ -173,7 +173,7 @@ public class Util {
 			return locations;
 		}
 		
-		public String pathListToString(ArrayList<Point> locations){
+		public static String pathListToString(ArrayList<Point> locations){
 			String path  = "";
 			
 			for(int i=0;i<locations.size();i++){
