@@ -75,6 +75,23 @@ public class Direction {
     	
     	return path;    	
     }
+    
+    public static Double parseDistance(String jsonPath) throws JSONException{
+    	List<Point> path = new ArrayList<Point>();
+    	JSONObject obj = new JSONObject(jsonPath);
+    	JSONArray routes = obj.getJSONArray("routes");
+    	obj = routes.getJSONObject(0);
+    	JSONArray legs = obj.getJSONArray("legs");
+    	Double distance = 0.0;
+    	for(int i=0; i<legs.length(); i++){
+    		JSONObject leg = legs.getJSONObject(i);
+    		JSONObject dist = leg.getJSONObject("distance");
+    		distance += dist.getDouble("value");
+    	} 
+    	
+    	
+    	return distance;    	
+    }
 	
     public static List<Point> getPath(String start, String end) throws MalformedURLException, IOException, JSONException
     {
@@ -105,10 +122,40 @@ public class Direction {
         return parsePath(jsonPath);
     }
     
+    public static Double getRoadDistance(String start, String end) throws MalformedURLException, IOException, JSONException
+    {
+        String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
+
+        List<Point> path = new ArrayList<Point>();
+        HttpURLConnection con = WebConnection.getConnection(url);
+		
+        // optional default is GET
+        con.setRequestMethod("GET");
+
+        //add request header
+        con.setRequestProperty("User-Agent", USER_AGENT);
+
+        int responseCode = con.getResponseCode();
+        
+        BufferedReader in = new BufferedReader(
+        new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        String jsonPath = response.toString();
+        return parseDistance(jsonPath);
+    }
+    
     public static void main(String[] args) throws MalformedURLException, IOException, JSONException{
     	Direction obj = new Direction();
-    	obj.getPath("1683 Shoreview Avenue, San mateo CA - 94401", "100 Oracle Parkway, Redwood Shores, CA - 94064");
-    	System.out.println("NEW");
+    	//obj.getPath("1683 Shoreview Avenue, San mateo CA - 94401", "100 Oracle Parkway, Redwood Shores, CA - 94064");
+    	//System.out.println("NEW");
     	obj.getPath("San Francisco", "100 Oracle Parkway, Redwood Shores, CA - 94064");
+    	
     }
 }

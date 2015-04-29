@@ -5,20 +5,29 @@ package oraclecommute;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.sql.Types;
 
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleTypes;
 import oracle.jdbc.OracleResultSet;
 
-public class DbUtil 
-{	
-    String CREATE_EMPLOYEE = "BEGIN                             \n"   +
+public class DbUtil {
+
+	Connection conn = null;
+	
+	String CREATE_EMPLOYEE = "BEGIN                                                         \n"   +
 		      "  commute_employee.createEmployee (                 \n"   +
 		      "     i_username => ?,                                                \n"   +
 		      "     i_password => ?,                                  \n"   +        
@@ -33,15 +42,23 @@ public class DbUtil
 		      "     i_is_driver => ?);                                     \n"   +
 		      "END; ";
 			
-    String RETRIEVE_EMPLOYEES = "BEGIN  \n" +
-                            "  commute_employee.retrieveEmployees (                 \n"   +
-                            "  		o_employees => ?); \n" +
-                             "END; ";
-        // New Employee
-        // Db data
-        // Group Assign
-        // Group data in db
-        // 
+	String RETRIEVE_EMPLOYEES = "BEGIN  \n" +
+				"  commute_employee.retrieveEmployees (                 \n"   +
+				"  		o_employees => ?); \n" +
+				 "END; ";
+	
+	String GET_GROUP_EMPLOYEE_LOCATIONS = "BEGIN                                                         \n"   +
+		      "  commute_employee.get_grp_empl_locations (                 \n"   +
+		      "     o_locations => ?,                                                \n"   +
+		      "     i_group_id => ?);                                     \n"   +
+		      "END; ";
+	
+	String WRITE_PATH = "BEGIN                                                         \n"   +
+		      "  commute_employee.get_grp_empl_locations (                 \n"   +
+		      "     i_group_id => ?,                                                \n"   +
+		      "     i_path => ?);                                     \n"   +
+		      "END; ";
+	
 	public void createEmployee(Employee emp)
 	{	
          Connection conn = null; 
@@ -153,9 +170,82 @@ public class DbUtil
 		
 	}
 	
-        public Point getHome(Integer empid)
-        {
-            Point home = new Point();
+	public ArrayList<Point> getGroupEmployeeLocations(int groupId){
+		ArrayList<Point> locations = new ArrayList<Point>();
+		
+		try
+		 {     
+			 conn = this.getConnection();
+			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(CREATE_EMPLOYEE);
+				
+				
+			cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+			cstmt.setString(2, ""+groupId);			
+			cstmt.execute();
+			OracleResultSet rs = (OracleResultSet) cstmt.getCursor(1);
+			 while (rs.next()) {
+				 	
+				 String lat_str = rs.getString("coordx");
+				 Double lat=null;
+				 if(lat_str!=null){
+					 lat = Double.parseDouble(lat_str);
+				 }
+				 String lng_str = rs.getString("coordy");
+				 Double lng=null;
+				 if(lng_str!=null){
+					 lng = Double.parseDouble(lng_str);
+				 }
+				 if(lat!=null && lng!=null){
+					 Point pt = new Point(lat,lng);
+					 locations.add(pt);
+				 }
+				 
+		    }
+			conn.close();
+			
+			
+			
+		 }
+		 catch(Exception exp)
+		 {
+			 exp.printStackTrace();
+		 }
+		 finally
+		 {
+			 
+			 
+		 }
+		
+		return locations;
+	}
+	
+	public void writePath(int groupId, String path){
+		try
+		 {     
+			 conn = this.getConnection();
+			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(WRITE_PATH);
+				
+				
+			cstmt.setString(1, ""+groupId);
+			cstmt.setString(2, path);			
+			cstmt.execute();
+			conn.commit();
+			conn.close();
+			
+			
+			
+		 }
+		 catch(Exception exp)
+		 {
+			 exp.printStackTrace();
+		 }
+		 finally
+		 {
+			 
+			 
+		 }
+		
+	}
             
             String GETHOME = "BEGIN                                   \n"   +
 		      "     commute_employee.getEmployeeLocation (     \n"   +

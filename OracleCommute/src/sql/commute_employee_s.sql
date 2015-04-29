@@ -30,6 +30,14 @@ procedure getEmployeeLocation(i_id varchar2, o_coordx OUT varchar2, o_coordy OUT
 procedure getGroupPaths(o_paths OUT NOCOPY SYS_REFCURSOR);
 		 
 procedure assignGroup(i_gid  IN NUMBER, i_id IN NUMBER);
+PROCEDURE get_grp_empl_locations(
+	i_group_id NUMBER,
+	o_locations OUT NOCOPY SYS_REFCURSOR);
+	
+PROCEDURE write_path(
+i_group_id NUMBER,
+i_path VARCHAR2);
+		       
 end;
 /
 commit;

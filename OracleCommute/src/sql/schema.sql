@@ -33,7 +33,7 @@ alter table emp_group add constraint emp_group_fk foreign key (emp_id) reference
 CREATE TABLE group_attr
 (
     g_id NUMBER,
-    path VARCHAR2(256), 
+    path VARCHAR2(1024), 
     start_time DATE,
     driver_id NUMBER
 );
