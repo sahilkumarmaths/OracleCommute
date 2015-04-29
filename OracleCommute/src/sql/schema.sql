@@ -9,7 +9,8 @@ CREATE TABLE employee
     phNo NUMBER(10),
     address VARCHAR2(256),
     email VARCHAR2(64),
-    time_departure DATE,
+    home_departure TIMESTAMP(6),
+    office_departure TIMESTAMP(6),
     is_driver VARCHAR2(1 CHAR)
 );
 

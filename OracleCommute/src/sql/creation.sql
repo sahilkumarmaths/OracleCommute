@@ -6,4 +6,5 @@ GRANT create any trigger TO commute;
 GRANT create any procedure TO commute;
 GRANT create sequence TO commute;
 GRANT create synonym TO commute;
+GRANT UNLIMITED TABLESPACE TO commute;
 commit;

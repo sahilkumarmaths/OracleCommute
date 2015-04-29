@@ -9,7 +9,8 @@ procedure createEmployee(i_username varchar2,
                          i_phone  number,
                          i_addr   varchar2,
                          i_email  varchar2,
-                         i_time_departure date,
+                         i_home_departure TIMESTAMP,
+			 i_office_departure TIMESTAMP,
                          i_is_driver      varchar2)
 IS
 BEGIN
@@ -24,7 +25,8 @@ BEGIN
 		PHNO,
 		ADDRESS,
 		EMAIL,
-		TIME_DEPARTURE,
+		HOME_DEPARTURE,
+		OFFICE_DEPARTURE,
 		IS_DRIVER
 		)
 		VALUES
@@ -38,12 +40,20 @@ BEGIN
 		i_phone,
 		i_addr,
 		i_email,
-		i_time_departure,
+		i_home_departure,
+		i_office_departure,
 		i_is_driver
 	);		
 END;
 
 
+procedure retrieveEmployees(o_employees OUT NOCOPY SYS_REFCURSOR)
+IS
+BEGIN
+	open o_employees FOR
+		select * from employee;
+
+END;
 
 end;
 /

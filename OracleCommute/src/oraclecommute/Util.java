@@ -35,6 +35,7 @@ public class Util {
 	
 	
 	
+	
 	public Connection getConnection()
 	{
 		
@@ -107,12 +108,22 @@ public class Util {
 	        double y4;
 	        double k;
 	        
+                double ca = Util.distance(x1,y1, x3,y3);
+                if (ca < radius)
+                    return true;
+                
+                double bc = Util.distance(x2,y2,x3,y3);
+                
+                if (bc < radius)
+                    return true;
+                
 	        double ab = Util.distance(x1, y1, x2, y2);
 	                
 	        if ( ab == 0)
 	        {
 	            return false;
 	        }
+                
 	        k = ((y2-y1) * (x3-x1) - (x2-x1) * (y3-y1)) /(ab*ab) ;
 	        x4 = x3 - k * (y2-y1);
 	        y4 = y3 + k * (x2-x1);
