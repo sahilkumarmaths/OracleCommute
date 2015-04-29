@@ -155,7 +155,7 @@ public class Direction {
     	Direction obj = new Direction();
     	//obj.getPath("1683 Shoreview Avenue, San mateo CA - 94401", "100 Oracle Parkway, Redwood Shores, CA - 94064");
     	//System.out.println("NEW");
-    	//obj.getPath("San Francisco", "100 Oracle Parkway, Redwood Shores, CA - 94064");
+    	obj.getPath("San Francisco", "100 Oracle Parkway, Redwood Shores, CA - 94064");
     	
     }
 }

@@ -55,6 +55,29 @@ BEGIN
 
 END;
 
+PROCEDURE get_grp_empl_locations(
+	i_group_id NUMBER,
+	o_locations OUT NOCOPY SYS_REFCURSOR)
+IS
+BEGIN
+	OPEN o_locations FOR
+		SELECT coordx, coordy FROM
+		employee emp,
+		emp_grp grp
+		WHERE g_id = i_group_id;
+END;
+
+PROCEDURE write_path(
+i_group_id NUMBER,
+i_path VARCHAR2)
+IS
+BEGIN
+	UPDATE group_attr
+	SET path = i_path
+	WHERE g_id = i_group_id;
+END;	
+
+
 end;
 /
 commit;

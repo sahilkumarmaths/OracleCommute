@@ -23,6 +23,14 @@ procedure createEmployee(i_username varchar2,
 
 
 procedure retrieveEmployees(o_employees OUT NOCOPY SYS_REFCURSOR);
+
+PROCEDURE get_grp_empl_locations(
+	i_group_id NUMBER,
+	o_locations OUT NOCOPY SYS_REFCURSOR);
+	
+PROCEDURE write_path(
+i_group_id NUMBER,
+i_path VARCHAR2);
 		       
 end;
 /
