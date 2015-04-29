@@ -9,9 +9,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.json.JSONException;
-
 public class Util {
 
 	Connection conn = null;
@@ -158,5 +159,31 @@ public class Util {
 			
 			return isOkay;
 		}
+		
+		public ArrayList<Point> pathStringToList(String path){
+			ArrayList<Point> locations = new ArrayList<Point>();
+			List<String> items = Arrays.asList(path.split("\\s*,\\s*"));
+			
+			for(int i=0; i<items.size();i+=2){
+				Point pt = new Point(Double.parseDouble(items.get(i)),Double.parseDouble(items.get(i+1)));
+				locations.add(pt);
+			}
+			
+			
+			return locations;
+		}
+		
+		public String pathListToString(ArrayList<Point> locations){
+			String path  = "";
+			
+			for(int i=0;i<locations.size();i++){
+				path+=locations.get(i).getLat()+",";
+				path+=locations.get(i).getLng()+",";				
+			}			
+			path = path.substring(0, path.length()-1);			
+			return path;
+		}
+		
+		
    
 }
