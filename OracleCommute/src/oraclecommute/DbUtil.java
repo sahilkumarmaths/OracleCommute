@@ -50,7 +50,13 @@ public class DbUtil {
 		      "     o_locations => ?,                                                \n"   +
 		      "     i_group_id => ?);                                     \n"   +
 		      "END; ";
-
+	
+	String WRITE_PATH = "BEGIN                                                         \n"   +
+		      "  commute_employee.get_grp_empl_locations (                 \n"   +
+		      "     i_group_id => ?,                                                \n"   +
+		      "     i_path => ?);                                     \n"   +
+		      "END; ";
+	
 	public void createEmployee(Employee emp)
 	{
 		
@@ -183,6 +189,34 @@ public class DbUtil {
 		 }
 		
 		return locations;
+	}
+	
+	public void writePath(int groupId, String path){
+		try
+		 {     
+			 conn = this.getConnection();
+			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(WRITE_PATH);
+				
+				
+			cstmt.setString(1, ""+groupId);
+			cstmt.setString(2, path);			
+			cstmt.execute();
+			conn.commit();
+			conn.close();
+			
+			
+			
+		 }
+		 catch(Exception exp)
+		 {
+			 exp.printStackTrace();
+		 }
+		 finally
+		 {
+			 
+			 
+		 }
+		
 	}
 	
 	
