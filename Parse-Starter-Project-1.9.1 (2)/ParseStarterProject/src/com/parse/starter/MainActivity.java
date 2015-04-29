@@ -19,7 +19,6 @@ public class MainActivity extends Activity {
         System.out.println("in main");
 
 
-
         Parse.initialize(this, "MpTpblv5HgufOlBxG3q4xdrKYskcA8rJbQLCozyW", "pa1yuxLCOjK3llXPeRzK9gpWlk8521AuzbOx3NEh");
         ParseUser.enableAutomaticUser();
         ParseACL defaultACL = new ParseACL();
@@ -40,9 +39,10 @@ public class MainActivity extends Activity {
             // If current user is NOT anonymous user
             // Get current user data from Parse.com
             ParseUser currentUser = ParseUser.getCurrentUser();
+            System.out.println(currentUser.getUsername());
             if (currentUser != null) {
                 // Send logged in users to Welcome.class
-                Intent intent = new Intent(MainActivity.this, Welcome.class);
+                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(intent);
                 finish();
             } else {
@@ -53,6 +53,7 @@ public class MainActivity extends Activity {
                 finish();
             }
         }
+
     }
 
 
