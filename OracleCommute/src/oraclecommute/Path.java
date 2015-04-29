@@ -40,6 +40,9 @@ public class Path {
 			i++;
 		}		
 		String path_str = Util.pathListToString(path);
+		obj.writePath(groupId, path_str);
+		
+		
 	}
 
 }
