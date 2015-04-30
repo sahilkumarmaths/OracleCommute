@@ -43,6 +43,22 @@ public class DbUtil {
 		      "END; ";
 			
         
+    String UPDATE_EMPLOYEE = "BEGIN                                                         \n"   +
+                  "  commute_employee.updateEmployee (                 \n"   +
+                  "     i_emp_id => ?,                                                \n"   +
+                  "     i_username => ?,                                                \n"   +
+                  "     i_password => ?,                                  \n"   +        
+                  "     i_coordx => ?,                                     \n"   +
+                  "     i_coordy => ?,                                            \n"   +
+                  "     i_name => ?,                                      \n"   +
+                  "     i_phone => ?,                                      \n"   +
+                  "     i_addr => ?,                                      \n"   +
+                  "     i_email => ?,                                      \n"   +
+                  "     i_home_departure => ?,                                      \n"   +
+                  "     i_office_departure => ?,                                      \n"   +
+                  "     i_is_driver => ?);                                     \n"   +
+                  "END; ";
+        
        
 	String RETRIEVE_EMPLOYEES = "BEGIN  \n" +
 				"  commute_employee.retrieveEmployees (                 \n"   +
@@ -67,6 +83,12 @@ public class DbUtil {
 		      "     o_coordx => ?,                             \n"   +        
 		      "     o_coordy => ?                              \n"   +
 		      "); END; ";
+         
+    String GET_DRIVER = "BEGIN                                                         \n"   +
+                  "  commute_employee.get_driver (                 \n"   +
+                  "     o_driver => ?,                                                \n"   +
+                  "     i_group_id => ?);                                     \n"   +
+                  "END; ";
 	
 	public void createEmployee(Employee emp)
 	{	
@@ -175,11 +197,84 @@ public class DbUtil {
 		
 	}
 	
-	public void updateEmployee(String username, HashMap<String,String> attributes)
+	public void updateEmployee(Employee emp)
 	{
-		
+            
+	    Connection conn = null; 
+	    try
+	    {     
+	           conn = this.getConnection();
+	            CallableStatement cstmt = conn.prepareCall(UPDATE_EMPLOYEE);
+	                   
+                   cstmt.setDouble(1, emp.getId());        
+	           cstmt.setString(2, emp.getUsername());
+	           cstmt.setString(3, emp.getPassword());
+	           cstmt.setDouble(4, emp.getCoordx());
+	           cstmt.setDouble(5, emp.getCoordy());
+	           cstmt.setString(6, emp.getName());
+	           cstmt.setDouble(7, emp.getPhone());
+	           cstmt.setString(8, emp.getAddress());
+	           cstmt.setString(9, emp.getEmail());
+	           cstmt.setTimestamp(10, emp.getHome_departure());
+	           cstmt.setTimestamp(11, emp.getOffice_departure());
+	           cstmt.setString(12, emp.isIs_driver()? "Y":"N");
+                   cstmt.setString(13,emp.isIs_assigned_grp()? "Y":"N");
+	           cstmt.executeUpdate();
+	           conn.commit();
+	           conn.close(); 
+	           
+	           //assignEmployee(emp);
+	           // TODO
+	    }
+	    catch(Exception exp)
+	    {
+	            exp.printStackTrace();
+	    }
+            
+            
+            
+            
+            
 	}
 	
+        public void updateGroup(Group grp) {
+            String UPDATE_GROUP = "BEGIN                                                         \n"   +
+                          "  commute_employee.updateGroupAttr (                 \n"   +
+                          "     i_group_id => ?,                                                \n"   +
+                          "     i_path => ?,                                                \n"   +
+                          "     i_start_time => ?,                                                \n"   +
+                          "     i_driver_id => ?,                                                \n"   +
+                          "     i_size => ?);                                     \n"   +
+                          "END; ";
+            
+            
+            try{
+             
+                 conn = this.getConnection();
+                 CallableStatement cstmt = conn.prepareCall(UPDATE_GROUP);
+                 cstmt.setDouble(1, grp.getG_id());
+                 cstmt.setString(2, grp.getPath());
+                 cstmt.setTimestamp(3, Timestamp.valueOf(grp.getStart_time()));
+                 cstmt.setDouble(4, grp.getDriver_id());
+                 cstmt.setDouble(5,grp.getSize() );
+   
+                    cstmt.executeUpdate();
+            
+                    conn.close(); 
+  
+                //assignEmployee(emp);
+                // TODO
+            }
+            catch(Exception exp)
+            {
+                 exp.printStackTrace();
+            }
+            
+            
+            
+            
+        }
+        
 	public ArrayList<Point> getGroupEmployeeLocations(int groupId){
 		ArrayList<Point> locations = new ArrayList<Point>();
 		
@@ -306,6 +401,43 @@ public class DbUtil {
              
             
         }
+        
+    public Double insertGroupAttr(Group grp)
+    {
+         String INSERT_GROUP_ATTR = "BEGIN                                                         \n"   +
+                  "  commute_employee.insertGroupAttr (                 \n"   +
+                "     o_g_id => ?,                                                \n"   +
+                  "     i_start_time => ?,                                                \n"   +
+                  "     i_driver_id => ?,                                                \n"   +
+                  "     i_size=> ?);                                  \n"   +        
+                  "END; ";
+         
+        try{
+         
+             conn = this.getConnection();
+             CallableStatement cstmt = conn.prepareCall(INSERT_GROUP_ATTR);
+             cstmt.registerOutParameter(1, OracleTypes.NUMBER);
+             cstmt.setTimestamp(2, Timestamp.valueOf(grp.getStart_time())); 
+             cstmt.setDouble(3, grp.getDriver_id());
+             cstmt.setDouble(4, grp.getSize());
+                 
+             
+                cstmt.executeUpdate();
+    
+                conn.close(); 
+            return cstmt.getDouble(1);
+            //assignEmployee(emp);
+            // TODO
+     }
+     catch(Exception exp)
+     {
+             exp.printStackTrace();
+     }
+         
+        return -1.0; 
+    }
+        
+        
 	public Connection getConnection()
 	{
                 Connection conn = null; 
@@ -437,6 +569,54 @@ public class DbUtil {
         }    
         return grps;
     }
+    
+    
+    public Point getDriver(int groupId){
+                    Point location = new Point();
+                    
+                    try
+                     {     
+                             conn = this.getConnection();
+                             OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(GET_DRIVER);
+                                    
+                                    
+                            cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+                            cstmt.setString(2, ""+groupId);                 
+                            cstmt.execute();
+                            OracleResultSet rs = (OracleResultSet) cstmt.getCursor(1);
+                             if (rs.next()) {
+                                            
+                                     String lat_str = rs.getString("coordx");
+                                     Double lat=null;
+                                     if(lat_str!=null){
+                                             lat = Double.parseDouble(lat_str);
+                                     }
+                                     String lng_str = rs.getString("coordy");
+                                     Double lng=null;
+                                     if(lng_str!=null){
+                                             lng = Double.parseDouble(lng_str);
+                                     }
+                                     if(lat!=null && lng!=null){
+                                             location = new Point(lat,lng);                                  
+                                     }                               
+                        }
+                            conn.close();
+                            
+                            
+                            
+                     }
+                     catch(Exception exp)
+                     {
+                             exp.printStackTrace();
+                     }
+                     finally
+                     {
+                             
+                             
+                     }
+                    
+                    return location;
+            }
 
 	
 }

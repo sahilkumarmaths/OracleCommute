@@ -4,15 +4,24 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+
 import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Proxy;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.net.URLEncoder;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class Direction {
     private static final String GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json?address=";
@@ -93,13 +102,18 @@ public class Direction {
     	return distance;    	
     }
 	
-    public List<Point> getPath(String start, String end) throws MalformedURLException, IOException, JSONException
+    public static List<Point> getPath(String start, String end) throws MalformedURLException, IOException, JSONException
     {
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 
-        List<Point> path = new ArrayList<Point>();
-        HttpURLConnection con = WebConnection.getConnection(url);
-		
+       
+       // HttpURLConnection con = WebConnection.getConnection(url);
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
+        URL httpsUrl = new URL(url);
+        
+        HttpsURLConnection con = (HttpsURLConnection) httpsUrl.openConnection(proxy); 
+        
+        
         // optional default is GET
         con.setRequestMethod("GET");
 
@@ -126,8 +140,11 @@ public class Direction {
     {
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 
-        List<Point> path = new ArrayList<Point>();
-        HttpURLConnection con = WebConnection.getConnection(url);
+        
+        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
+        URL httpsUrl = new URL(url);
+        
+        HttpsURLConnection con = (HttpsURLConnection) httpsUrl.openConnection(proxy); 
 		
         // optional default is GET
         con.setRequestMethod("GET");
@@ -153,9 +170,10 @@ public class Direction {
     
     public static void main(String[] args) throws MalformedURLException, IOException, JSONException{
     	Direction obj = new Direction();
-    	//obj.getPath("1683 Shoreview Avenue, San mateo CA - 94401", "100 Oracle Parkway, Redwood Shores, CA - 94064");
-    	//System.out.println("NEW");
-    	obj.getPath("San Francisco", "100 Oracle Parkway, Redwood Shores, CA - 94064");
+    	obj.getPath("461 25th Ave, San Francisco, CA 94121, USA", "Los Gatos, CA, USA");
+    	System.out.println("NEW");
+    	//System.out.println(obj.getRoadDistance("San Mateo", "100 Oracle Parkway, Redwood Shores, CA - 94064"));
+    	//System.out.println(obj.getCoordinates("100 Oracle Parkway, Redwood Shores, CA - 94065"));
     	
     }
 }

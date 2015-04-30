@@ -1,11 +1,17 @@
 package oraclecommute;
 
+import java.io.IOException;
+
+import java.net.MalformedURLException;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import oraclecommute.Point;
 import oraclecommute.Util;
+
+import org.json.JSONException;
 
 public class Group 
 {
@@ -70,17 +76,17 @@ public class Group
 	
         //this function assigns a group to this employee
         
-	public void assignEmployee(Employee emp)
-        {
+	public void assignEmployee(Employee emp) throws MalformedURLException, IOException, JSONException {
             DbUtil dbUtl = new DbUtil();
             Path objPath = new Path();
             Util utl  = new Util();
+	    Direction dir = new Direction();
             boolean isDriver = emp.isIs_driver();
             List<Group> grps = null;
             
             if(isDriver)
             {
-                // emp == driver
+                // emp == driver...Find all singletons and create new group
                 List<Employee> empList = dbUtl.getAllEmpNotAssigned();
                 List<Employee> intersectingRiders = new LinkedList<Employee>();
                 for(Employee rider : empList)
@@ -98,16 +104,39 @@ public class Group
                 if(intersectingRiders.size() != 0)
                 {
                     // we can form a group happy
+                    //We have to set the start time??
+                    
                     //create a new group
                     //add riders and driver to the group (insertgroup)
                     //call findpath
                     //write the path
                     
+                    Group grp = new Group();
+                    grp.setDriver_id(emp.getId());
+                    grp.setSize(intersectingRiders.size() +  1.0);
+                    grp.setStart_time(""); //set the start time...?
+                    Double new_g_Id = dbUtl.insertGroupAttr(grp);
                     
-                    for()
+                    for(Employee rider: intersectingRiders)
                     {
-                     
+                        dbUtl.insertGroup(new_g_Id, rider.getId());
+                        rider.setIs_assigned_grp(true);
+                        dbUtl.updateEmployee(rider);
                     }
+                    
+                    dbUtl.insertGroup(new_g_Id, emp.getId());
+                    
+                    try
+                    {
+                        //table update
+                        //findPath ...should also update the driver
+                        dbUtl.writePath(new_g_Id.intValue(), objPath.findPath(new Integer(new_g_Id.intValue())));
+                        // Update more tables
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                    
                     return;
                 }
                 
@@ -128,13 +157,40 @@ public class Group
                 
                 if(candidateGroup != null)
                 {
+                 
+                    
                  // update the group
-                        // make this ass the new driver 
+                        // make this emp as the new driver...??
                         // update the size
                         // Update all the tables
+                    
+                    dbUtl.insertGroup(candidateGroup.getG_id(), emp.getId());
+                    candidateGroup.setSize(candidateGroup.getSize() + 1);
+                    candidateGroup.setDriver_id(emp.getId());
+                    dbUtl.updateGroup(candidateGroup);
+                    emp.setIs_assigned_grp(true);
+                    dbUtl.updateEmployee(emp); //write this code
+                    
+                    try
+                    {
+                        //table update
+                        dbUtl.writePath(candidateGroup.getG_id().intValue(), objPath.findPath(new Integer(candidateGroup.getG_id().intValue())));
+                     
+                        
+                        // Update more tables
+                    }catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                    
                 
                     return;
                 }
+                
+                //create empty group for the driver.
+                
+                
+                
                  //create a group for the drive
                  //for each singleton empo try 
                  
@@ -167,7 +223,8 @@ public class Group
 
                 groupIds.add(gp.getG_id().intValue());
             }
-
+            
+          
             for(int i = 0; i < paths.size(); i++)
             {
                 ArrayList<Point> path = new ArrayList<Point>();
@@ -190,15 +247,36 @@ public class Group
                 try
                 {
                     //table update
+                    //u
                     dbUtl.writePath(candidateGroupId, objPath.findPath(candidateGroupId));
-                    // Update more tables
+                    emp.setIs_assigned_grp(true);
+                    dbUtl.insertGroup(candidateGroupId.doubleValue(), emp.getId());
+                    dbUtl.updateEmployee(emp);
+                    
+                  
                 }catch (Exception e)
                 {
                     e.printStackTrace();
                 }
             } else
             {
-                //form new group if driver else nothing
+                //form new group if driver can't get riders and any driver for himself
+                if(emp.isIs_driver()) {
+                    
+                    Group newStandaloneGrp = new Group();
+                    
+                    List<Point> driverPath = dir.getPath(emp.getCoordx().toString()+"," + emp.getCoordy().toString(), "500 Oracle Pkwy, Redwood Shores, 94065");
+                    String path = utl.pathListToString((ArrayList) driverPath);
+                    newStandaloneGrp.setDriver_id(emp.getId());
+                    newStandaloneGrp.setSize(1.0);
+                    newStandaloneGrp.setStart_time(emp.getHome_departure().toString()); //set the start time...?
+                    Double new_g_Id = dbUtl.insertGroupAttr(newStandaloneGrp);
+                    emp.setIs_assigned_grp(true);
+                    dbUtl.updateEmployee(emp);
+                    dbUtl.insertGroup(new_g_Id, emp.getId());
+                    
+                }
+                
             }
 	}
 	

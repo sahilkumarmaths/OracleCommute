@@ -7,6 +7,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Employee {
     
+    
+    private Double id;
+
+    public void setId(Double id) {
+        this.id = id;
+    }
+
+    public Double getId() {
+        return id;
+    }
     private String name;
     private String username;
     private String password;

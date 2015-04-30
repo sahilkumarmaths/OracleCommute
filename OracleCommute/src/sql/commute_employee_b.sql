@@ -56,6 +56,57 @@ BEGIN
 
 END;
 
+procedure getEmployee(o_employee OUT NOCOPY SYS_REFCURSOR, i_emp_id NUMBER)
+IS
+BEGIN
+	open o_employee FOR
+		select * from employee where emp_id = i_emp_id ;
+
+END;
+
+procedure getGroup(o_group OUT NOCOPY SYS_REFCURSOR, i_grp_id NUMBER)
+IS
+BEGIN
+	open o_group FOR
+		select * from emp_group where g_id = i_grp_id ;
+
+END;
+
+procedure updateEmployee(i_emp_id     number,
+                         i_username varchar2,
+                         i_password varchar2,
+                         i_coordx   varchar2,
+                         i_coordy   varchar2,
+                         i_name   varchar2,
+                         i_phone  number,
+                         i_addr   varchar2,
+                         i_email  varchar2,
+                         i_home_departure TIMESTAMP,
+			 i_office_departure TIMESTAMP,
+                         i_is_driver      varchar2,
+                         is_grp_assigned  varchar2)
+IS
+BEGIN
+	UPDATE employee
+        SET USERNAME := i_username,
+        SET PASSWD   := i_password,
+	SET COORDX   := i_coordx,
+        SET COORDY   := i_coordy,
+	SET NAME     := i_name,
+        SET PHNO     := i_phone,
+	SET ADDRESS  := i_addr,
+	SET EMAIL    := i_email,
+	SET HOME_DEPARTURE := i_home_departure,
+	SET OFFICE_DEPARTURE := i_office_departure,
+	SET IS_DRIVER        := i_is_driver,
+        SET is_grp_assigned  := is_grp_assigned
+        WHERE
+        emp_id = emp_id;
+        commit;
+        
+END;
+
+
 procedure getEmployeeLocation(i_id varchar2, o_coordx OUT varchar2, o_coordy OUT varchar2)
 IS
 BEGIN
@@ -117,6 +168,52 @@ BEGIN
     INSERT INTO employee (g_id, emp_id) values(gr_id, em_id);
     commit;
 END;
+
+PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER)
+IS
+BEGIN
+    o_g_id = emp_grp_id_seq.NEXTVAL;
+    INSERT INTO group_attr ( g_id, path, start_time, driver_id, size) INTO (o_g_id, null,i_start_time,i_driver_id, i_size );
+    commit;
+END;
+
+PROCEDURE updateGroupAttr(i_group_id NUMBER, i_path varchar2, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER)
+IS 
+BEGIN
+    
+    update group_attr
+    SET path :=  i_path,
+    SET start_time := i_start_time,
+    SET driver_id := i_driver_id,
+    SET size := i_size
+    WHERE g_id = i_group_id;
+
+END;
+
+
+PROCEDURE get_grp_empl_locations(
+	i_group_id NUMBER,
+	o_locations OUT NOCOPY SYS_REFCURSOR)
+IS
+BEGIN
+	OPEN o_locations FOR
+		SELECT coordx, coordy FROM
+		employee emp JOIN emp_group grp ON emp.emp_id = grp.EMP_ID
+		WHERE g_id = i_group_id;
+END;
+
+PROCEDURE get_driver(
+o_driver OUT NOCOPY SYS_REFCURSOR,
+i_group_id NUMBER)
+IS
+BEGIN
+	OPEN o_driver FOR
+		SELECT coordx, coordy FROM group_attr grp JOIN EMPLOYEE emp ON grp.DRIVER_ID = emp.EMP_ID where g_id = i_group_id;
+END;
+
+
+
+
 
 
 end;
