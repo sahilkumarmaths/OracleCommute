@@ -39,7 +39,8 @@ public class DbUtil {
 		      "     i_email => ?,                                      \n"   +
 		      "     i_home_departure => ?,                                      \n"   +
 		      "     i_office_departure => ?,                                      \n"   +
-		      "     i_is_driver => ?);                                     \n"   +
+		      "     i_is_driver => ?,                                     \n"   +
+                      "     is_grp_assigned => ?);                                     \n"   +
 		      "END; ";
 			
         
@@ -110,6 +111,7 @@ public class DbUtil {
 		cstmt.setTimestamp(9, emp.getHome_departure());
                 cstmt.setTimestamp(10, emp.getOffice_departure());
 		cstmt.setString(11, emp.isIs_driver()? "Y":"N");
+                cstmt.setString(12,"N"); //by default false
 		cstmt.executeUpdate();
 		conn.commit();
                 conn.close(); 
@@ -447,7 +449,7 @@ public class DbUtil {
 			if(conn == null)
 			{
 				conn = DriverManager.getConnection(
-						"jdbc:oracle:thin:@slc06owh:1523:beedb", "commute",
+						"jdbc:oracle:thin:@slc06owh:1523:beedb2", "commute",
 						"Welcome1");
 			}
 			

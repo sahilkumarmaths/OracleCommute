@@ -1,4 +1,4 @@
-package oraclecommute;
+/*package oraclecommute;
 
 import java.sql.Date;
 
@@ -47,3 +47,4 @@ public class EmpSvc {
         return empObj.get("name").toString();
     }
 }
+*/

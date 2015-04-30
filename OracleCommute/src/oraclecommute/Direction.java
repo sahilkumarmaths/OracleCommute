@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+//import java.nio.charset.StandardCharsets.UTF_8;
 
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
@@ -31,7 +31,7 @@ public class Direction {
     {
         Point pt = new Point();
 
-        String encodedStr = URLEncoder.encode(addr, UTF_8.toString());
+        String encodedStr = URLEncoder.encode(addr,  "UTF-8");
         HttpURLConnection con = WebConnection.getConnection(GEOCODE + encodedStr);
 
         con.setRequestMethod("GET");

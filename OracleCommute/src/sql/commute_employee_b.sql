@@ -30,7 +30,8 @@ BEGIN
 		EMAIL,
 		HOME_DEPARTURE,
 		OFFICE_DEPARTURE,
-		IS_DRIVER
+		IS_DRIVER,
+                is_grp_assigned
 		)
 		VALUES
 		(
@@ -45,7 +46,8 @@ BEGIN
 		i_email,
 		i_home_departure,
 		i_office_departure,
-		i_is_driver
+		i_is_driver,
+                is_grp_assigned
 	);		
 END;
 
@@ -143,7 +145,8 @@ END;
 PROCEDURE getAllEmpNotAssigned(o_emp_cur OUT NOCOPY SYS_REFCURSOR)
 IS
 BEGIN
-    OPEN o_emp_cur FOR SELECT * from employee WHERE is_grp_assigned = 'N';
+    OPEN o_emp_cur FOR 
+        SELECT * from employee WHERE is_grp_assigned = 'N';
 END;
 
 
