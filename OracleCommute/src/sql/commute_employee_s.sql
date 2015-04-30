@@ -20,7 +20,8 @@ procedure createEmployee(i_username varchar2,
 			 i_email  varchar2,
 			 i_home_departure TIMESTAMP,
 			 i_office_departure TIMESTAMP,
-			 i_is_driver 	  varchar2);
+			 i_is_driver 	  varchar2,
+                         is_grp_assigned  varchar2);
                          
 procedure getGroup(o_group OUT NOCOPY SYS_REFCURSOR, i_grp_id NUMBER);
 
@@ -51,17 +52,12 @@ procedure getGroupPaths(o_paths OUT NOCOPY SYS_REFCURSOR);
 		 
 procedure assignGroup(i_gid  IN NUMBER, i_id IN NUMBER);
 
-PROCEDURE get_grp_empl_locations(
-	i_group_id NUMBER,
-	o_locations OUT NOCOPY SYS_REFCURSOR);
 	
-PROCEDURE write_path(
-i_group_id NUMBER,
-i_path VARCHAR2);
+PROCEDURE write_path(i_group_id NUMBER, i_path VARCHAR2);
 
--- this 
+
 PROCEDURE getAllEmpNotAssigned(o_emp_cur OUT NOCOPY SYS_REFCURSOR);
-_
+
 PROCEDURE getVacantGroups(o_vacant_grp OUT NOCOPY SYS_REFCURSOR);
 		    
 
@@ -69,11 +65,8 @@ PROCEDURE insertGroup(gr_id IN NUMBER, em_id IN NUMBER);
 
 PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER );
 
-PROCEDURE get_driver(
-o_driver OUT NOCOPY SYS_REFCURSOR,
-i_group_id NUMBER);
+PROCEDURE get_driver(o_driver OUT NOCOPY SYS_REFCURSOR, i_group_id NUMBER);
 		       
-
 end;
 /
 commit;

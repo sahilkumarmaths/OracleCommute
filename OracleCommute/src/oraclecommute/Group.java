@@ -338,7 +338,7 @@ public class Group
             Path.findPath(candidateGroupId);
                 
                 */
-        }
+        
 	
 	
 }

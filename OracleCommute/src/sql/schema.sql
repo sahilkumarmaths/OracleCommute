@@ -17,7 +17,7 @@ CREATE TABLE employee
 
 
 create sequence emp_id_seq start with 1 increment by 1 nomaxvalue;
-alter table employee add constraint employee_pk primary key (emp_id);
+
 
 
 CREATE TABLE emp_group
@@ -28,19 +28,18 @@ CREATE TABLE emp_group
 
 create sequence emp_grp_id_seq start with 1 increment by 1 nomaxvalue;
 
-alter table emp_group add constraint emp_group_pk primary key (g_id);
-alter table emp_group add constraint emp_group_fk foreign key (emp_id) references employee(emp_id) ON DELETE CASCADE;
+
 
 CREATE TABLE group_attr
 (
     g_id NUMBER,
     path VARCHAR2(1024), 
-    start_time DATE,
+    start_time TIMESTAMP,
     driver_id NUMBER,
-    size NUMBER
+    grp_size NUMBER
 );
 
-alter table group_attr add constraint group_attr_fk foreign key (g_id) references emp_group(g_id) ON DELETE CASCADE;
+
 
 commit;
 /

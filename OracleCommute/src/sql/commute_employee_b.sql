@@ -12,7 +12,9 @@ procedure createEmployee(i_username varchar2,
                          i_email  varchar2,
                          i_home_departure TIMESTAMP,
 			 i_office_departure TIMESTAMP,
-                         i_is_driver      varchar2)
+                         i_is_driver      varchar2,
+                         is_grp_assigned  varchar2
+                         )
 IS
 BEGIN
 	INSERT INTO employee
@@ -88,18 +90,7 @@ procedure updateEmployee(i_emp_id     number,
 IS
 BEGIN
 	UPDATE employee
-        SET USERNAME := i_username,
-        SET PASSWD   := i_password,
-	SET COORDX   := i_coordx,
-        SET COORDY   := i_coordy,
-	SET NAME     := i_name,
-        SET PHNO     := i_phone,
-	SET ADDRESS  := i_addr,
-	SET EMAIL    := i_email,
-	SET HOME_DEPARTURE := i_home_departure,
-	SET OFFICE_DEPARTURE := i_office_departure,
-	SET IS_DRIVER        := i_is_driver,
-        SET is_grp_assigned  := is_grp_assigned
+        SET (USERNAME,PASSWD,COORDX,COORDY, NAME,PHNO, ADDRESS, EMAIL,HOME_DEPARTURE,OFFICE_DEPARTURE,IS_DRIVER,is_grp_assigned) = ( select i_username, i_password, i_coordx, i_coordy, i_name, i_phone, i_addr, i_email, i_home_departure, i_office_departure, i_is_driver,  is_grp_assigned from dual)
         WHERE
         emp_id = emp_id;
         commit;
@@ -159,21 +150,21 @@ END;
 PROCEDURE getVacantGroups(o_vacant_grp OUT NOCOPY SYS_REFCURSOR)
 IS
 BEGIN
-    OPEN o_vacant_grp FOR SELECT * FROM group_attr WHERE size < '5';
+    OPEN o_vacant_grp FOR SELECT * FROM group_attr WHERE grp_size < 5;
 END;
 
 PROCEDURE insertGroup(gr_id IN NUMBER, em_id IN NUMBER)
 IS
 BEGIN
-    INSERT INTO employee (g_id, emp_id) values(gr_id, em_id);
+    INSERT INTO emp_group (g_id, emp_id) values(gr_id, em_id);
     commit;
 END;
 
 PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER)
 IS
 BEGIN
-    o_g_id = emp_grp_id_seq.NEXTVAL;
-    INSERT INTO group_attr ( g_id, path, start_time, driver_id, size) INTO (o_g_id, null,i_start_time,i_driver_id, i_size );
+    
+    INSERT INTO group_attr ( g_id, path, start_time, driver_id, grp_size) VALUES(o_g_id, null,i_start_time,i_driver_id, i_size );
     commit;
 END;
 
@@ -182,25 +173,13 @@ IS
 BEGIN
     
     update group_attr
-    SET path :=  i_path,
-    SET start_time := i_start_time,
-    SET driver_id := i_driver_id,
-    SET size := i_size
+        SET (path, start_time, driver_id, grp_size) = (select i_path, i_start_time, i_driver_id, i_size from dual)
     WHERE g_id = i_group_id;
 
 END;
 
 
-PROCEDURE get_grp_empl_locations(
-	i_group_id NUMBER,
-	o_locations OUT NOCOPY SYS_REFCURSOR)
-IS
-BEGIN
-	OPEN o_locations FOR
-		SELECT coordx, coordy FROM
-		employee emp JOIN emp_group grp ON emp.emp_id = grp.EMP_ID
-		WHERE g_id = i_group_id;
-END;
+
 
 PROCEDURE get_driver(
 o_driver OUT NOCOPY SYS_REFCURSOR,
