@@ -82,7 +82,7 @@ public class Group
             Util utl  = new Util();
 	    Direction dir = new Direction();
             boolean isDriver = emp.isIs_driver();
-            List<Group> grps = null;
+            List<Group> vacantGrps = null;
             
             if(isDriver)
             {
@@ -91,6 +91,8 @@ public class Group
                 List<Employee> intersectingRiders = new LinkedList<Employee>();
                 for(Employee rider : empList)
                 {
+                    if(rider.getId() == emp.getId()) continue;
+                    
                     if( intersectingRiders.size() > 3)
                     {
                         break;
@@ -141,10 +143,10 @@ public class Group
                 }
                 
                 // This as a driver for existing groups
-                grps = dbUtl.getVacantGroups();
+                vacantGrps = dbUtl.getVacantGroups();
                 boolean intersect = false;
                 Group candidateGroup = null;
-                for(Group grp : grps)
+                for(Group grp : vacantGrps)
                 {
                     ArrayList<Point> grpPath = utl.pathStringToList(grp.getPath());
                     
@@ -208,15 +210,15 @@ public class Group
             }
             // emp as a rider
             Point home = new Point(emp.getCoordx(), emp.getCoordy());
-            if(grps == null)
+            if(vacantGrps == null)
             {
-                grps = dbUtl.getVacantGroups();
+                vacantGrps = dbUtl.getVacantGroups();
             }
             
             ArrayList<ArrayList<Point>> paths = new ArrayList<ArrayList<Point>>();
             ArrayList<Integer> groupIds = new ArrayList<Integer>();
             ArrayList<Integer> candidateIds = new ArrayList<Integer>();
-            for(Group gp : grps)
+            for(Group gp : vacantGrps)
             {
                 ArrayList<Point> path = utl.pathStringToList(gp.getPath());
                 paths.add(path);
