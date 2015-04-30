@@ -57,7 +57,8 @@ public class DbUtil {
                   "     i_email => ?,                                      \n"   +
                   "     i_home_departure => ?,                                      \n"   +
                   "     i_office_departure => ?,                                      \n"   +
-                  "     i_is_driver => ?);                                     \n"   +
+                  "     i_is_driver => ?,                                      \n"   +
+                  "     is_grp_assigned => ?);                                     \n"   +
                   "END; ";
         
        
@@ -146,7 +147,7 @@ public class DbUtil {
                     gp.setDriver_id(rs.getDouble("driver_id"));
                     gp.setG_id(rs.getDouble("g_id"));
                     gp.setPath(rs.getString("path"));
-                    gp.setStart_time(rs.getDATE("start_time").toString());
+                    gp.setStart_time(rs.getTimestamp("start_time"));
                     gp.setSize(rs.getDouble("size"));
                     groups.add(gp);
                } 
@@ -256,7 +257,7 @@ public class DbUtil {
                  CallableStatement cstmt = conn.prepareCall(UPDATE_GROUP);
                  cstmt.setDouble(1, grp.getG_id());
                  cstmt.setString(2, grp.getPath());
-                 cstmt.setTimestamp(3, Timestamp.valueOf(grp.getStart_time()));
+                 cstmt.setTimestamp(3, grp.getStart_time());
                  cstmt.setDouble(4, grp.getDriver_id());
                  cstmt.setDouble(5,grp.getSize() );
    
@@ -418,16 +419,18 @@ public class DbUtil {
          
              conn = this.getConnection();
              CallableStatement cstmt = conn.prepareCall(INSERT_GROUP_ATTR);
+            
              cstmt.registerOutParameter(1, OracleTypes.NUMBER);
-             cstmt.setTimestamp(2, Timestamp.valueOf(grp.getStart_time())); 
+             cstmt.setTimestamp(2, grp.getStart_time()); 
+           
              cstmt.setDouble(3, grp.getDriver_id());
              cstmt.setDouble(4, grp.getSize());
-                 
+         System.out.println("Inserting group");
              
                 cstmt.executeUpdate();
-    
+                Double id = cstmt.getDouble(1);
                 conn.close(); 
-            return cstmt.getDouble(1);
+            return  id;
             //assignEmployee(emp);
             // TODO
      }
@@ -449,7 +452,7 @@ public class DbUtil {
 			if(conn == null)
 			{
 				conn = DriverManager.getConnection(
-						"jdbc:oracle:thin:@slc06owh:1523:beedb2", "commute",
+						"jdbc:oracle:thin:@localhost:1521:XE", "commute",
 						"Welcome1");
 			}
 			
@@ -509,7 +512,8 @@ public class DbUtil {
             OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(getEmpQuery);
             cstmt.registerOutParameter(1, OracleTypes.CURSOR);
             cstmt.execute();
-            OracleResultSet rs = (OracleResultSet)cstmt.getResultSet();
+            
+            OracleResultSet rs = (OracleResultSet) cstmt.getCursor(1);
             
             while(rs.next())
             {
@@ -551,7 +555,7 @@ public class DbUtil {
             OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(queryVacantGroup);
             cstmt.registerOutParameter(1, OracleTypes.CURSOR);
             cstmt.execute();
-            OracleResultSet rs = (OracleResultSet)cstmt.getResultSet();
+            OracleResultSet rs = (OracleResultSet) cstmt.getCursor(1);
             
             while(rs.next())
             {
@@ -559,7 +563,7 @@ public class DbUtil {
                 gp.setDriver_id(rs.getDouble("driver_id"));
                 gp.setG_id(rs.getDouble("g_id"));
                 gp.setPath(rs.getString("path"));
-                gp.setStart_time(rs.getDATE("start_time").toString());
+                gp.setStart_time(rs.getTimestamp("start_time"));
                 gp.setSize(rs.getDouble("size"));
                 grps.add(gp);
             }

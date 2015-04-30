@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 
 import java.sql.Timestamp;
 
+import java.util.List;
+
 import org.json.JSONException;
 
 public class Tests {
@@ -19,6 +21,7 @@ public class Tests {
         DbUtil dbUtil = new DbUtil();
 
         Employee emp = new Employee();
+        emp.setId(1.0);
         emp.setAddress("744 Edgewater Blvd, Apt 200, Foster City, CA 94404");
         emp.setCoordx(37.55);
         emp.setCoordy(-122.27);
@@ -31,17 +34,32 @@ public class Tests {
         emp.setName("Virendra Karappa");
         emp.setEmail("vkarappa1@gmail.com");
         
-       // dbUtil.createEmployee(emp);
+     /*   Direction dir = new Direction();
+        try {
+            List<Point> driverPath =
+                dir.getPath("744 Edgewater Blvd Foster City",
+                            "400 Oracle Pkway Redwood Shores");
+            for(Point pt: driverPath) {
+                
+                System.out.println(pt.getLat());
+            }
+        } catch (JSONException e) {
+        } catch (MalformedURLException e) {
+        } catch (IOException e) {
+        }*/
+
+        //  dbUtil.createEmployee(emp);
         
+     // dbUtil.getAllEmpNotAssigned();
         Group gp = new Group();
 
 
-        try {
-            gp.assignEmployee(emp);
+       try {
+           gp.assignEmployee(emp);
         } catch (MalformedURLException e) {
         } catch (IOException e) {
         } catch (JSONException e) {
-        }
+        } 
     }
     
     

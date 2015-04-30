@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import java.net.MalformedURLException;
 
+import java.sql.Timestamp;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,7 +19,7 @@ public class Group
 {
     private Double g_id;
     private String path;
-    private String start_time;
+    private Timestamp start_time;
     private Double driver_id;
     private Double size;
 
@@ -45,11 +47,11 @@ public class Group
         this.path = path;
     }
 
-    public String getStart_time() {
+    public Timestamp getStart_time() {
         return start_time;
     }
 
-    public void setStart_time(String start_time) {
+    public void setStart_time(Timestamp start_time) {
         this.start_time = start_time;
     }
 
@@ -116,7 +118,7 @@ public class Group
                     Group grp = new Group();
                     grp.setDriver_id(emp.getId());
                     grp.setSize(intersectingRiders.size() +  1.0);
-                    grp.setStart_time(""); //set the start time...?
+                    grp.setStart_time(emp.getHome_departure()); //set the start time...?
                     Double new_g_Id = dbUtl.insertGroupAttr(grp);
                     
                     for(Employee rider: intersectingRiders)
@@ -244,6 +246,8 @@ public class Group
             
             Integer candidateGroupId = Util.getBestCandidate(paths, groupIds, candidateIds, home);
             
+            System.out.println("candidateGroupId:- " + candidateGroupId) ;
+            
             if(candidateGroupId != -1)
             {
                 try
@@ -264,15 +268,20 @@ public class Group
             {
                 //form new group if driver can't get riders and any driver for himself
                 if(emp.isIs_driver()) {
+                    System.out.println("Creating new group for the driver:- " + candidateGroupId) ;
                     
                     Group newStandaloneGrp = new Group();
                     
-                    List<Point> driverPath = dir.getPath(emp.getCoordx().toString()+"," + emp.getCoordy().toString(), "500 Oracle Pkwy, Redwood Shores, 94065");
+                    System.out.println("Creating new group") ;
+                    List<Point> driverPath = dir.getPath(emp.getAddress(), "500 Oracle Pkwy, Redwood Shores, 94065");
+                    
                     String path = utl.pathListToString((ArrayList) driverPath);
                     newStandaloneGrp.setDriver_id(emp.getId());
                     newStandaloneGrp.setSize(1.0);
-                    newStandaloneGrp.setStart_time(emp.getHome_departure().toString()); //set the start time...?
+                    newStandaloneGrp.setStart_time(emp.getHome_departure()); //set the start time...?
+                  
                     Double new_g_Id = dbUtl.insertGroupAttr(newStandaloneGrp);
+                    System.out.println("new_g_Id:- " + new_g_Id) ;
                     emp.setIs_assigned_grp(true);
                     dbUtl.updateEmployee(emp);
                     dbUtl.insertGroup(new_g_Id, emp.getId());

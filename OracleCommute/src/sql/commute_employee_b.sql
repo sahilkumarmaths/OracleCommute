@@ -166,7 +166,7 @@ END;
 PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER)
 IS
 BEGIN
-    
+    o_g_id := emp_grp_id_seq.NEXTVAL;
     INSERT INTO group_attr ( g_id, path, start_time, driver_id, grp_size) VALUES(o_g_id, null,i_start_time,i_driver_id, i_size );
     commit;
 END;

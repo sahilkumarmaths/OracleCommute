@@ -104,16 +104,16 @@ public class Direction {
 	
     public static List<Point> getPath(String start, String end) throws MalformedURLException, IOException, JSONException
     {
-        String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
+        String url = "http://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 
        
-       // HttpURLConnection con = WebConnection.getConnection(url);
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
-        URL httpsUrl = new URL(url);
+        HttpURLConnection con = WebConnection.getConnection(url);
+       // Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
+       // URL httpsUrl = new URL(url);
         
-        HttpsURLConnection con = (HttpsURLConnection) httpsUrl.openConnection(proxy); 
-        
-        
+       // HttpsURLConnection con = (HttpsURLConnection) httpsUrl.openConnection(proxy); 
+      
+   //    System.out.println("Hello");
         // optional default is GET
         con.setRequestMethod("GET");
 
@@ -121,6 +121,9 @@ public class Direction {
         con.setRequestProperty("User-Agent", USER_AGENT);
 
         int responseCode = con.getResponseCode();
+
+  //      System.out.println("\nSending 'GET' request to URL : " + url);
+   //     System.out.println("Response Code : " + responseCode);
         
         BufferedReader in = new BufferedReader(
         new InputStreamReader(con.getInputStream()));
@@ -133,6 +136,7 @@ public class Direction {
         in.close();
 
         String jsonPath = response.toString();
+        System.out.println(jsonPath);
         return parsePath(jsonPath);
     }
     
@@ -141,11 +145,14 @@ public class Direction {
         String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 
         
-        Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
-        URL httpsUrl = new URL(url);
+        //Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
+       // URL httpsUrl = new URL(url);
         
-        HttpsURLConnection con = (HttpsURLConnection) httpsUrl.openConnection(proxy); 
-		
+    //    HttpsURLConnection con = (HttpsURLConnection) httpsUrl.openConnection(proxy); 
+        
+        HttpURLConnection con = WebConnection.getConnection(url);
+    
+        
         // optional default is GET
         con.setRequestMethod("GET");
 
