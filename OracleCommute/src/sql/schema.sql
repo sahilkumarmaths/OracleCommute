@@ -44,3 +44,4 @@ CREATE TABLE group_attr
 commit;
 /
 
+set autocommit off;

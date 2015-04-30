@@ -197,5 +197,4 @@ END;
 
 end;
 /
-commit;
-show errors; 
+
