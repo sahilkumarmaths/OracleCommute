@@ -37,7 +37,7 @@ procedure updateEmployee(i_emp_id     number,
                          i_home_departure TIMESTAMP,
 			 i_office_departure TIMESTAMP,
                          i_is_driver      varchar2,
-                         is_grp_assigned  varchar2);
+                         i_is_grp_assigned  varchar2);
 
 
 procedure retrieveEmployees(o_employees OUT NOCOPY SYS_REFCURSOR);
@@ -66,9 +66,12 @@ PROCEDURE insertGroup(gr_id IN NUMBER, em_id IN NUMBER);
 PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER );
 
 PROCEDURE get_driver(o_driver OUT NOCOPY SYS_REFCURSOR, i_group_id NUMBER);
+
+procedure get_group_id(o_group OUT NOCOPY SYS_REFCURSOR, i_emp_id NUMBER);
+
+procedure updateGroupAttr(i_group_id NUMBER, i_path varchar2, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER);
 		       
 end;
 /
 commit;
 show errors;
-

@@ -58,7 +58,7 @@ public class DbUtil {
                   "     i_home_departure => ?,                                      \n"   +
                   "     i_office_departure => ?,                                      \n"   +
                   "     i_is_driver => ?,                                      \n"   +
-                  "     is_grp_assigned => ?);                                     \n"   +
+                  "     i_is_grp_assigned => ?);                                     \n"   +
                   "END; ";
         
        
@@ -221,7 +221,11 @@ public class DbUtil {
 	           cstmt.setTimestamp(10, emp.getHome_departure());
 	           cstmt.setTimestamp(11, emp.getOffice_departure());
 	           cstmt.setString(12, emp.isIs_driver()? "Y":"N");
-                   cstmt.setString(13,emp.isIs_assigned_grp()? "Y":"N");
+                
+                   
+                
+                //   cstmt.setString(13, "N");
+                   cstmt.setString(13, emp.isIs_assigned_grp()? "Y":"N");
 	           cstmt.executeUpdate();
 	           conn.commit();
 	           conn.close(); 
@@ -284,7 +288,7 @@ public class DbUtil {
 		try
 		 {     
 			 conn = this.getConnection();
-			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(CREATE_EMPLOYEE);
+			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(GET_GROUP_EMPLOYEE_LOCATIONS);
 				
 				
 			cstmt.registerOutParameter(1, OracleTypes.CURSOR);
