@@ -58,7 +58,7 @@ public class DbUtil {
                   "     i_home_departure => ?,                                      \n"   +
                   "     i_office_departure => ?,                                      \n"   +
                   "     i_is_driver => ?,                                      \n"   +
-                  "     is_grp_assigned => ?);                                     \n"   +
+                  "     i_is_grp_assigned => ?);                                     \n"   +
                   "END; ";
         
        
@@ -92,6 +92,18 @@ public class DbUtil {
                   "     i_group_id => ?);                                     \n"   +
                   "END; ";
 	
+    String GET_GROUP_ID_AND_DELETE_EMPLOYEE = "BEGIN                                                         \n"   +
+            "  commute_employee.get_group_id (                 \n"   +
+            "     o_group => ?,                                                \n"   +
+            "     i_emp_id => ?);                                     \n"   +
+            "END; ";
+    
+    String GET_GROUP = "BEGIN                                                         \n"   +
+            "  commute_employee.getGroup (                 \n"   +
+            "     o_group => ?,                                                \n"   +
+            "     i_grp_id => ?);                                     \n"   +
+            "END; ";
+    
 	public void createEmployee(Employee emp)
 	{	
          Connection conn = null; 
@@ -209,7 +221,7 @@ public class DbUtil {
 	           conn = this.getConnection();
 	            CallableStatement cstmt = conn.prepareCall(UPDATE_EMPLOYEE);
 	                   
-                   cstmt.setDouble(1, emp.getId());        
+                  cstmt.setDouble(1, emp.getId());        
 	           cstmt.setString(2, emp.getUsername());
 	           cstmt.setString(3, emp.getPassword());
 	           cstmt.setDouble(4, emp.getCoordx());
@@ -221,7 +233,11 @@ public class DbUtil {
 	           cstmt.setTimestamp(10, emp.getHome_departure());
 	           cstmt.setTimestamp(11, emp.getOffice_departure());
 	           cstmt.setString(12, emp.isIs_driver()? "Y":"N");
-                   cstmt.setString(13,emp.isIs_assigned_grp()? "Y":"N");
+                
+                   
+                
+                //   cstmt.setString(13, "N");
+                   cstmt.setString(13, emp.isIs_assigned_grp()? "Y":"N");
 	           cstmt.executeUpdate();
 	           conn.commit();
 	           conn.close(); 
@@ -284,7 +300,7 @@ public class DbUtil {
 		try
 		 {     
 			 conn = this.getConnection();
-			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(CREATE_EMPLOYEE);
+			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(GET_GROUP_EMPLOYEE_LOCATIONS);
 				
 				
 			cstmt.registerOutParameter(1, OracleTypes.CURSOR);
@@ -452,7 +468,7 @@ public class DbUtil {
 			if(conn == null)
 			{
 				conn = DriverManager.getConnection(
-						"jdbc:oracle:thin:@localhost:1521:XE", "commute",
+						"jdbc:oracle:thin:@192.168.43.150:1521:XE", "commute",
 						"Welcome1");
 			}
 			
@@ -623,6 +639,103 @@ public class DbUtil {
                     
                     return location;
             }
+    
+    
+    public Integer getGroupIdAndDeleteEmp(Double empId){
+        Integer grpId = -1;
+        
+        try
+         {     
+                 conn = this.getConnection();
+                 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(GET_GROUP_ID_AND_DELETE_EMPLOYEE);
+                        
+                        
+                cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+                cstmt.setString(2, ""+empId);                 
+                cstmt.execute();
+                OracleResultSet rs = (OracleResultSet) cstmt.getCursor(1);
+                 if (rs.next()) {
+                                
+                         String grpId_str = rs.getString("g_id");
+                         
+                         if(grpId_str!=null){
+                                 grpId = Integer.parseInt(grpId_str);
+                         }
+                                      
+            }
+            conn.commit();
+            conn.close();                
+                
+         }
+         catch(Exception exp)
+         {
+                 exp.printStackTrace();
+         }
+         finally
+         {
+                 
+                 
+         }
+        
+        return grpId;
+    }
+    
+    public Group getGroup(Integer groupId)
+	{
+		
+		 Group grp = new Group();
+		 try {
+			 Connection conn = null;  
+			 conn = this.getConnection();
+			 OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(GET_GROUP);
+			 cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+			 cstmt.setString(2, ""+groupId);       
+			 cstmt.execute();
+			 OracleResultSet rs = (OracleResultSet)cstmt.getCursor(1);
+			 if (rs.next()) {
+				 	
+				 
+				 grp.setDriver_id(Double.parseDouble(rs.getString("driver_id")));
+				 grp.setG_id(Double.parseDouble(rs.getString("g_id")));
+				 grp.setPath(rs.getString("path"));
+				 grp.setSize(Double.parseDouble(rs.getString("grp_size")));
+				 grp.setStart_time(rs.getTimestamp("start_time"));
+
+		        }
+			 
+			 
+			 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 
+		return grp;
+		
+	}
+    
+    public static void main(String[] args){
+    	/*Employee emp = new Employee();
+        emp.setId(4.0);
+        emp.setAddress("744 Edgewater Blvd, Apt 200, Foster City, CA 94404");
+        emp.setCoordx(37.55);
+        emp.setCoordy(-122.27);
+        emp.setHome_departure(Timestamp.valueOf("2011-10-02 18:48:05"));
+        emp.setOffice_departure(Timestamp.valueOf("2011-10-02 18:48:05"));
+        emp.setIs_driver(true);
+        emp.setUsername("fdsggawr");
+        emp.setPassword("foisdiohfds");
+        emp.setPhone(9789384939.0);
+        emp.setName("Virendra ff");
+        emp.setEmail("dd@gmail.com");
+        emp.setIs_assigned_grp(false);
+        
+        DbUtil obj = new DbUtil();
+        obj.updateEmployee(emp);*/
+    	
+    	DbUtil obj = new DbUtil();
+    	obj.getGroup(5);
+    }
 
 	
 }

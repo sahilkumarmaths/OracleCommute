@@ -202,7 +202,9 @@ public class Util {
 			return path;
 		}
                 
-                
+        public static void main(String[] args){
+        	System.out.println(Util.distance(37.3679232, -122.0032597, 37.3720256, -121.9946682));
+        }
 		
 		
    

@@ -94,7 +94,7 @@ BEGIN
 	UPDATE employee
         SET (USERNAME,PASSWD,COORDX,COORDY, NAME,PHNO, ADDRESS, EMAIL,HOME_DEPARTURE,OFFICE_DEPARTURE,IS_DRIVER,is_grp_assigned) = ( select i_username, i_password, i_coordx, i_coordy, i_name, i_phone, i_addr, i_email, i_home_departure, i_office_departure, i_is_driver,  is_grp_assigned from dual)
         WHERE
-        emp_id = emp_id;
+        emp_id = i_emp_id;
         commit;
         
 END;
@@ -119,8 +119,7 @@ IS
 BEGIN
 	OPEN o_locations FOR
 		SELECT coordx, coordy FROM
-		employee emp,
-		emp_group grp
+		employee emp JOIN emp_group grp ON emp.emp_id = grp.EMP_ID
 		WHERE g_id = i_group_id;
 END;
 

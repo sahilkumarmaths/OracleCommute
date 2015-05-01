@@ -3,6 +3,7 @@ package oraclecommute;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 
@@ -11,6 +12,7 @@ public class Path {
 	public String findPath(Integer groupId) throws MalformedURLException, IOException, JSONException{
 		//read locations from DB
 		ArrayList<Point> locations = new ArrayList<Point>();
+		ArrayList<Point> fullpath = new ArrayList<Point>();
 		DbUtil obj = new DbUtil();
 				
 		locations = obj.getGroupEmployeeLocations(groupId);
@@ -50,8 +52,25 @@ public class Path {
 			path.add(locations.get(nxt_idx));
 			i++;
 			cur_idx = nxt_idx;
-		}		
-		String path_str = Util.pathListToString(path);
+		}	
+		
+		Point pt = new Point(37.530953,-122.263427);
+		path.add(pt);
+		
+		for(int j=0; j<path.size()-1; j++){
+			if(fullpath.size()>0){
+				fullpath.remove(fullpath.size()-1);
+			}
+			Point pt1 = path.get(j);
+			Point pt2 = path.get(j+1);
+			String start = pt1.getLat()+","+ pt1.getLng();
+			String end = pt2.getLat()+","+ pt2.getLng();
+			List<Point> leg = Direction.getPath(start, end);
+			for(int k=0;k<leg.size();k++){
+				fullpath.add(leg.get(k));
+			}
+		}
+		String path_str = Util.pathListToString(fullpath);
 		System.out.println(path_str);
 		return path_str;
 		//obj.writePath(groupId, path_str);
@@ -59,7 +78,7 @@ public class Path {
 	
 	public static void main(String [] args) throws MalformedURLException, IOException, JSONException{
 		Path obj = new Path();
-		obj.findPath(3);
+		obj.findPath(5);
 	}
 
 }

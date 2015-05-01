@@ -78,9 +78,9 @@ public class Direction {
     		Point dst = new Point(leg.getJSONObject("end_location").getDouble("lat"),leg.getJSONObject("end_location").getDouble("lng"));
         	path.add(dst);
     	} 
-    	for(int i = 0 ; i<path.size(); i++){
+    	/*for(int i = 0 ; i<path.size(); i++){
     		System.out.println(path.get(i).getLat()+", "+path.get(i).getLng());
-    	}
+    	}*/
     	
     	return path;    	
     }
@@ -136,7 +136,7 @@ public class Direction {
         in.close();
 
         String jsonPath = response.toString();
-        System.out.println(jsonPath);
+        //System.out.println(jsonPath);
         return parsePath(jsonPath);
     }
     

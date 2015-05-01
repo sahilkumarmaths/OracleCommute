@@ -1,17 +1,11 @@
 package oraclecommute;
 
 import java.io.IOException;
-
 import java.net.MalformedURLException;
-
 import java.sql.Timestamp;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import oraclecommute.Point;
-import oraclecommute.Util;
 
 import org.json.JSONException;
 
@@ -325,30 +319,45 @@ public class Group
         
         
                 
-                /*for(Group gp : gps)
-            {
-                ArrayList<Point> path = pathStringToList(gp.getPath());
-                paths.add(path);
-
-                groupIds.add(gp.getG_id().intValue());
-            }
-
-            for(int i=0; i< paths.size(); i++){
-                    ArrayList<Point> path = new ArrayList<Point>();
-                    for(int j=1; j<path.size(); j++){
-
-                            Point pt1 = path.get(j-1);
-                            Point pt2 = path.get(j);	
-                            if( && Util.checkDiversion(path.get(path.size()-1), path.get(0),home) ){
-                                    candidateIds.add(groupIds.get(i));
-                                    break;
-                            }
-                    }			
-            }
-            Integer candidateGroupId = Util.getBestCandidate(paths, groupIds, candidateIds, home);
-            Path.findPath(candidateGroupId);
-                
-                */
+        public void removeEmployeeFromGroup(Employee emp) throws MalformedURLException, IOException, JSONException{
+        	Double empId = emp.getId();
+        	emp.setIs_assigned_grp(false);
+        	DbUtil obj = new DbUtil();
+        	obj.updateEmployee(emp);
+        	Integer grpId = obj.getGroupIdAndDeleteEmp(empId);
+        	
+        	Group grp = obj.getGroup(grpId);
+        	
+        	grp.setSize(grp.getSize()-1);
+        	Path p = new Path();
+        	grp.setPath(p.findPath(grpId));
+        	
+        	obj.updateGroup(grp);	
+        	
+        	
+        	
+        }
+        
+        public static void main(String[] args) throws MalformedURLException, IOException, JSONException{
+        	Employee emp = new Employee();
+            emp.setId(13.0);
+            emp.setAddress("744 Edgewater Blvd, Apt 200, Foster City, CA 94404");
+            emp.setCoordx(37.55);
+            emp.setCoordy(-122.27);
+            emp.setHome_departure(Timestamp.valueOf("2011-10-02 18:48:05"));
+            emp.setOffice_departure(Timestamp.valueOf("2011-10-02 18:48:05"));
+            emp.setIs_driver(true);
+            emp.setUsername("fdsggawr");
+            emp.setPassword("foisdiohfds");
+            emp.setPhone(9789384939.0);
+            emp.setName("Virendra ff");
+            emp.setEmail("dd@gmail.com");
+            emp.setIs_assigned_grp(false);
+        	
+        	Group g= new Group();
+        	g.removeEmployeeFromGroup(emp);
+        	
+        }
         
 	
 	

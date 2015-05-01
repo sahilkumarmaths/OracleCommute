@@ -1,6 +1,7 @@
 CREATE TABLE employee
 (
-    emp_id NUMBER,
+    emp_id NUMBER NOT NULL,
+    username VARCHAR2(64),
     passwd VARCHAR2(64),
     coordx NUMBER,
     coordy NUMBER,
@@ -8,24 +9,39 @@ CREATE TABLE employee
     phNo NUMBER(10),
     address VARCHAR2(256),
     email VARCHAR2(64),
-    time_departure DATE,
-    is_driver BOOLEAN
+    home_departure TIMESTAMP(6),
+    office_departure TIMESTAMP(6),
+    is_driver VARCHAR2(1 CHAR),
+    is_grp_assigned VARCHAR2(1 CHAR)
 );
 
-CREATE TABLE GROUP
-(
-    gid NUMBER,
-    empid NUMBER,
-    , constraints emp_fkey ... 
-    , 
-),
+
+create sequence emp_id_seq start with 1 increment by 1 nomaxvalue;
 
 
-CREATE TABLE GROUP_ATTR
+
+CREATE TABLE emp_group
 (
-    gid NUMBER,
-    path VARCHAR2(256), 
-    start_time DATE,
+    g_id NUMBER NOT NULL,
+    emp_id NUMBER
+);
+
+create sequence emp_grp_id_seq start with 1 increment by 1 nomaxvalue;
+
+
+
+CREATE TABLE group_attr
+(
+    g_id NUMBER,
+    path VARCHAR2(1024), 
+    start_time TIMESTAMP,
     driver_id NUMBER,
-    constraint fkey driverid
+    grp_size NUMBER
 );
+
+
+
+commit;
+/
+
+set autocommit off;

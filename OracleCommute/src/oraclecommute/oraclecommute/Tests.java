@@ -1,11 +1,8 @@
 package oraclecommute;
 
 import java.io.IOException;
-
 import java.net.MalformedURLException;
-
 import java.sql.Timestamp;
-
 import java.util.List;
 
 import org.json.JSONException;
