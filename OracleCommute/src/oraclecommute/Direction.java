@@ -24,7 +24,7 @@ import java.net.URLEncoder;
 import javax.net.ssl.HttpsURLConnection;
 
 public class Direction {
-    private static final String GEOCODE = "https://maps.googleapis.com/maps/api/geocode/json?address=";
+    private static final String GEOCODE = "http://maps.googleapis.com/maps/api/geocode/json?address=";
     private static final String USER_AGENT = "Mozilla/5.0";
         
     public static Point getCoordinates(String addr) throws UnsupportedEncodingException, IOException, JSONException
@@ -106,7 +106,7 @@ public class Direction {
     {
         String url = "http://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 
-       
+        System.out.println(url);
         HttpURLConnection con = WebConnection.getConnection(url);
        // Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
        // URL httpsUrl = new URL(url);

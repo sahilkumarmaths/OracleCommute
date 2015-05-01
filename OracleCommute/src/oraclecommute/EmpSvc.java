@@ -21,11 +21,17 @@ public class EmpSvc {
         {
            
             Employee emp = new Employee();
+            Direction dir = new Direction();
             try
             { 
                 JSONObject empObj = new JSONObject(empData);
                 emp.setUsername(empObj.getString("username"));
                 emp.setPassword(empObj.getString("passwd"));
+                Point pt = dir.getCoordinates(empObj.getString("address"));
+                //       System.out.println("here");
+                emp.setCoordx(pt.getLat());
+                emp.setCoordy(pt.getLng());    
+                
                 emp.setCoordx(Double.valueOf(empObj.getString("coordx")));
                 emp.setCoordy(Double.valueOf(empObj.getString("coordy")));
                 emp.setName(empObj.getString("name"));

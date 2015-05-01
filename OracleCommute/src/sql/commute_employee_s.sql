@@ -65,7 +65,7 @@ PROCEDURE getVacantGroups(o_vacant_grp OUT NOCOPY SYS_REFCURSOR);
 
 PROCEDURE insertGroup(gr_id IN NUMBER, em_id IN NUMBER);
 
-PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER );
+PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER, i_path varchar2 );
 
 PROCEDURE get_driver(o_driver OUT NOCOPY SYS_REFCURSOR, i_group_id NUMBER);
 

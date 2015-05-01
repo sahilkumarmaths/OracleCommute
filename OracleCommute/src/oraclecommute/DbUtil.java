@@ -465,7 +465,8 @@ public class DbUtil {
                 "     o_g_id => ?,                                                \n"   +
                   "     i_start_time => ?,                                                \n"   +
                   "     i_driver_id => ?,                                                \n"   +
-                  "     i_size=> ?);                                  \n"   +        
+                  "     i_size => ?,                                                \n"   +
+                  "     i_path=> ?);                                  \n"   +        
                   "END; ";
          
         try{
@@ -478,7 +479,7 @@ public class DbUtil {
            
              cstmt.setDouble(3, grp.getDriver_id());
              cstmt.setDouble(4, grp.getSize());
-         System.out.println("Inserting group");
+             cstmt.setString(5, grp.getPath());
              
                 cstmt.executeUpdate();
                 Double id = cstmt.getDouble(1);
@@ -617,7 +618,7 @@ public class DbUtil {
                 gp.setG_id(rs.getDouble("g_id"));
                 gp.setPath(rs.getString("path"));
                 gp.setStart_time(rs.getTimestamp("start_time"));
-                gp.setSize(rs.getDouble("size"));
+                gp.setSize(rs.getDouble("grp_size"));
                 grps.add(gp);
             }
             conn.close();

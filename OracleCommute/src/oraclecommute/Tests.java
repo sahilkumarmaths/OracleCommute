@@ -53,20 +53,22 @@ public class Tests {
         }*/
 
      //     dbUtil.updateEmployee(emp);
-
-      Employee emp = dbUtil.getEmployee("157340");
-      System.out.println(emp.getName());
-
-     // dbUtil.getAllEmpNotAssigned();
- /*       Group gp = new Group();
+    
 
 
        try {
+           
+            
+            Employee emp = dbUtil.getEmployee("138872");
+
+             Group gp = new Group();
+           
+           
            gp.assignEmployee(emp);
-        } catch (MalformedURLException e) {
-        } catch (IOException e) {
-        } catch (JSONException e) {
-        }*/
+           
+           
+        } catch (Exception e) {
+        } 
     }
     
     
