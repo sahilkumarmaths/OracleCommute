@@ -5,10 +5,12 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import java.util.List;
+
 import org.json.JSONException;
 
 public class Path {
-	
+
 	public String findPath(Integer groupId) throws MalformedURLException, IOException, JSONException{
 		//read locations from DB
 		ArrayList<Point> locations = new ArrayList<Point>();
@@ -75,6 +77,7 @@ public class Path {
 		return path_str;
 		//obj.writePath(groupId, path_str);
 	}
+
 	
 	public static void main(String [] args) throws MalformedURLException, IOException, JSONException{
 		Path obj = new Path();

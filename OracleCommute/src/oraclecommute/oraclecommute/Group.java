@@ -128,6 +128,11 @@ public class Group
                     {
                         //table update
                         //findPath ...should also update the driver
+                       // grp.setG_id(new_g_Id);
+                       // grp.setPath(objPath.findPath(new Integer(new_g_Id.intValue())));
+                       // dbUtl.updateGroup(grp);
+                        String path = objPath.findPath(new Integer(new_g_Id.intValue()));
+                        System.out.println("new Path: "+ path);
                         dbUtl.writePath(new_g_Id.intValue(), objPath.findPath(new Integer(new_g_Id.intValue())));
                         // Update more tables
                     }catch (Exception e)
@@ -238,8 +243,8 @@ public class Group
                 }			
             }
             
-            Integer candidateGroupId = Util.getBestCandidate(paths, groupIds, candidateIds, home);
-            
+            Integer candidateGroupIdIndex = Util.getBestCandidate(paths, groupIds, candidateIds, home);
+            Integer candidateGroupId =  groupIds.get(candidateGroupIdIndex);
             System.out.println("candidateGroupId:- " + candidateGroupId) ;
             
             if(candidateGroupId != -1)
@@ -273,7 +278,7 @@ public class Group
                     newStandaloneGrp.setDriver_id(emp.getId());
                     newStandaloneGrp.setSize(1.0);
                     newStandaloneGrp.setStart_time(emp.getHome_departure()); //set the start time...?
-                  
+                    newStandaloneGrp.setPath(path);
                     Double new_g_Id = dbUtl.insertGroupAttr(newStandaloneGrp);
                     System.out.println("new_g_Id:- " + new_g_Id) ;
                     emp.setIs_assigned_grp(true);
@@ -298,8 +303,7 @@ public class Group
             boolean intersect = false;
             try
             {
-                driverPath = dir.getPath(driver.getCoordx().toString()+","
-                    + driver.getCoordy().toString(), "500 Oracle Pkwy, Redwood Shores, 94065");
+                driverPath = dir.getPath(driver.getAddress(), "500 Oracle Pkwy, Redwood Shores, 94065");
                 
                 for (int i=0; i < driverPath.size() -1 ; i++)
                 {

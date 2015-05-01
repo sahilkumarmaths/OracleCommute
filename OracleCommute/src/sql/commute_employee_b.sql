@@ -60,11 +60,11 @@ BEGIN
 
 END;
 
-procedure getEmployee(o_employee OUT NOCOPY SYS_REFCURSOR, i_emp_id NUMBER)
+procedure getEmployee(o_employee OUT NOCOPY SYS_REFCURSOR, i_username NUMBER)
 IS
 BEGIN
 	open o_employee FOR
-		select * from employee where emp_id = i_emp_id ;
+		select * from employee where username = i_username ;
 
 END;
 
@@ -72,7 +72,7 @@ procedure getGroup(o_group OUT NOCOPY SYS_REFCURSOR, i_grp_id NUMBER)
 IS
 BEGIN
 	open o_group FOR
-		select * from emp_group where g_id = i_grp_id ;
+		select * from group_attr where g_id = i_grp_id ;
 
 END;
 
@@ -88,11 +88,11 @@ procedure updateEmployee(i_emp_id     number,
                          i_home_departure TIMESTAMP,
 			 i_office_departure TIMESTAMP,
                          i_is_driver      varchar2,
-                         is_grp_assigned  varchar2)
+                         i_IS_GRP_ASSIGNED  varchar2)
 IS
 BEGIN
 	UPDATE employee
-        SET (USERNAME,PASSWD,COORDX,COORDY, NAME,PHNO, ADDRESS, EMAIL,HOME_DEPARTURE,OFFICE_DEPARTURE,IS_DRIVER,is_grp_assigned) = ( select i_username, i_password, i_coordx, i_coordy, i_name, i_phone, i_addr, i_email, i_home_departure, i_office_departure, i_is_driver,  is_grp_assigned from dual)
+        SET (USERNAME,PASSWD,COORDX,COORDY, NAME,PHNO, ADDRESS, EMAIL,HOME_DEPARTURE,OFFICE_DEPARTURE,IS_DRIVER,IS_GRP_ASSIGNED) = ( select i_username, i_password, i_coordx, i_coordy, i_name, i_phone, i_addr, i_email, i_home_departure, i_office_departure, i_is_driver,  i_IS_GRP_ASSIGNED from dual)
         WHERE
         emp_id = i_emp_id;
         commit;
@@ -162,11 +162,11 @@ BEGIN
     commit;
 END;
 
-PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER)
+PROCEDURE insertGroupAttr( o_g_id OUT NOCOPY NUMBER, i_start_time TIMESTAMP, i_driver_id NUMBER, i_size NUMBER, i_path varchar2)
 IS
 BEGIN
     o_g_id := emp_grp_id_seq.NEXTVAL;
-    INSERT INTO group_attr ( g_id, path, start_time, driver_id, grp_size) VALUES(o_g_id, null,i_start_time,i_driver_id, i_size );
+    INSERT INTO group_attr ( g_id, path, start_time, driver_id, grp_size) VALUES(o_g_id, i_path,i_start_time,i_driver_id, i_size );
     commit;
 END;
 
@@ -194,9 +194,18 @@ END;
 
 
 
+procedure get_group_id(o_group OUT NOCOPY SYS_REFCURSOR, i_emp_id NUMBER)
+IS
+BEGIN
+	open o_group FOR
+		select g_id from emp_group where emp_id = i_emp_id ;
+		
+	DELETE from emp_group grp WHERE grp.emp_id = i_emp_id;
+END;
 
 
 
 end;
 /
 
+show errors;
