@@ -1,5 +1,6 @@
 package oraclecommute;
 
+import java.sql.Connection;
 import java.sql.Timestamp;
 
 import javax.ws.rs.Consumes;
@@ -70,6 +71,21 @@ public class EmpSvc {
                 return "false";
             }
         }
+    
+    @POST
+    @Consumes("text/plain")
+    @Produces("text/plain")
+    @Path("getEmp")
+    public String getEmployee(String username) {
+        
+        DbUtil dbUtil = new DbUtil();
+        
+        Employee emp =  dbUtil.getEmployee(username);
+        
+        return "";
+        
+        
+    }
     
 }
 
