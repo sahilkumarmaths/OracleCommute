@@ -83,7 +83,7 @@ public class Util {
 	   
 	   
 	   
-	   public static Double roadDistance(Point a, Point b) throws MalformedURLException, IOException, JSONException{
+	   public static Double roadDistance(Point a, Point b) throws MalformedURLException, IOException, JSONException, InterruptedException{
 		  
 		   
 		   String start = a.getLat()+","+a.getLng();
@@ -147,22 +147,39 @@ public class Util {
 	   
 	   public static Integer getBestCandidate(ArrayList<ArrayList<Point>> paths, ArrayList<Integer> groupIds, ArrayList<Integer> candidateIds, Point cur)
            {
-               if(paths.size() > 0)
+               if(candidateIds.size() > 0) 
+            	   
                {
+            	   ArrayList<ArrayList<Point>> grpPaths = new ArrayList<ArrayList<Point>>();
+            	   
+            	   for(int i=0;i<candidateIds.size();i++){
+            		   int idx = 0;
+            		   for(int j=0; j<groupIds.size();j++){
+            			   if(groupIds.get(j)==candidateIds.get(i)){
+            				   idx = j;
+            				   break;
+            			   }
+            		   }
+            		   grpPaths.add(paths.get(idx));
+            	   }
+            	   
                     Integer index = 0;
                     
-                    Double min_dist = Util.distance(paths.get(0).get(0), cur);
+                    Double min_dist = Util.distance(grpPaths.get(0).get(0), cur);
                     Double temp = 0.0;
-                    for(int i = 1; i < paths.size(); i++)
+                    for(int i = 1; i < grpPaths.size(); i++)
                     {
-                        temp = Util.distance(paths.get(i).get(0), cur);
+                        temp = Util.distance(grpPaths.get(i).get(0), cur);
                         if (temp < min_dist )
                         {
                             index = i;
                             min_dist = temp;
                         }
                     }
-                    return index;
+                    
+                    
+                    
+                   return candidateIds.get(index);
                }else
                {
                    return -1;

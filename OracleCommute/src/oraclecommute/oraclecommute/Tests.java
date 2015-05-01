@@ -56,7 +56,7 @@ public class Tests {
        try {
            
             
-            Employee emp = dbUtil.getEmployee("138872");
+            Employee emp = dbUtil.getEmployee("157340");
        //    Employee emp2 = dbUtil.getEmployee(username);
            
 
@@ -67,6 +67,7 @@ public class Tests {
            
            
         } catch (Exception e) {
+        	e.printStackTrace();
         } 
     }
     

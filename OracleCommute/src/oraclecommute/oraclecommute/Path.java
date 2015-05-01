@@ -4,14 +4,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import java.util.List;
 
 import org.json.JSONException;
 
 public class Path {
 
-	public String findPath(Integer groupId) throws MalformedURLException, IOException, JSONException{
+	public String findPath(Integer groupId) throws MalformedURLException, IOException, JSONException, InterruptedException{
 		//read locations from DB
 		ArrayList<Point> locations = new ArrayList<Point>();
 		ArrayList<Point> fullpath = new ArrayList<Point>();
@@ -73,13 +72,13 @@ public class Path {
 			}
 		}
 		String path_str = Util.pathListToString(fullpath);
-		System.out.println(path_str);
+		//System.out.println(path_str);
 		return path_str;
 		//obj.writePath(groupId, path_str);
 	}
 
 	
-	public static void main(String [] args) throws MalformedURLException, IOException, JSONException{
+	public static void main(String [] args) throws MalformedURLException, IOException, JSONException, InterruptedException{
 		Path obj = new Path();
 		obj.findPath(5);
 	}

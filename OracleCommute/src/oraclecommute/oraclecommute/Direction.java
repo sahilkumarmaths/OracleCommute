@@ -27,9 +27,11 @@ public class Direction {
     private static final String GEOCODE = "http://maps.googleapis.com/maps/api/geocode/json?address=";
     private static final String USER_AGENT = "Mozilla/5.0";
         
-    public static Point getCoordinates(String addr) throws UnsupportedEncodingException, IOException, JSONException
+    public static Point getCoordinates(String addr) throws UnsupportedEncodingException, IOException, JSONException, InterruptedException
     {
-        Point pt = new Point();
+        
+    	Thread.sleep(300);
+    	Point pt = new Point();
 
         String encodedStr = URLEncoder.encode(addr,  "UTF-8");
         HttpURLConnection con = WebConnection.getConnection(GEOCODE + encodedStr);
@@ -38,9 +40,15 @@ public class Direction {
 
         //add request header
         con.setRequestProperty("User-Agent", USER_AGENT);
-        int responseCode = con.getResponseCode();
+        int responseCode = 0;
+        responseCode = con.getResponseCode();
+        while(responseCode == 0){        	
+        	
+        }
+        InputStreamReader In = new InputStreamReader(con.getInputStream());
+        
 
-        BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()));
+        BufferedReader in = new BufferedReader(In);
         String inputLine;
         StringBuffer response = new StringBuffer();
 
@@ -63,6 +71,7 @@ public class Direction {
     }
 
     public static List<Point> parsePath(String jsonPath) throws JSONException{
+    	//System.out.println(jsonPath);
     	List<Point> path = new ArrayList<Point>();
     	JSONObject obj = new JSONObject(jsonPath);
     	JSONArray routes = obj.getJSONArray("routes");
@@ -86,6 +95,7 @@ public class Direction {
     }
     
     public static Double parseDistance(String jsonPath) throws JSONException{
+    	//System.out.println(jsonPath);
     	List<Point> path = new ArrayList<Point>();
     	JSONObject obj = new JSONObject(jsonPath);
     	JSONArray routes = obj.getJSONArray("routes");
@@ -102,11 +112,12 @@ public class Direction {
     	return distance;    	
     }
 	
-    public static List<Point> getPath(String start, String end) throws MalformedURLException, IOException, JSONException
+    public static List<Point> getPath(String start, String end) throws MalformedURLException, IOException, JSONException, InterruptedException
     {
-        String url = "http://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
+    	Thread.sleep(300);
+    	String url = "http://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 
-        System.out.println(url);
+       // System.out.println(url);
         HttpURLConnection con = WebConnection.getConnection(url);
        // Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
        // URL httpsUrl = new URL(url);
@@ -120,13 +131,19 @@ public class Direction {
         //add request header
         con.setRequestProperty("User-Agent", USER_AGENT);
 
-        int responseCode = con.getResponseCode();
-
-  //      System.out.println("\nSending 'GET' request to URL : " + url);
-   //     System.out.println("Response Code : " + responseCode);
+        int responseCode = 0;
+        responseCode = con.getResponseCode();
+    	//Thread.sleep(200);
+        while(responseCode == 0){
+        	// System.out.println("Response Code : " + responseCode);
+        }
+       // System.out.println("FINAL Response Code : " + responseCode);
+      //  System.out.println("\nSending 'GET' request to URL : " + url);
+       
         
         BufferedReader in = new BufferedReader(
         new InputStreamReader(con.getInputStream()));
+        
         String inputLine;
         StringBuffer response = new StringBuffer();
 
@@ -134,15 +151,17 @@ public class Direction {
             response.append(inputLine);
         }
         in.close();
-
+        
         String jsonPath = response.toString();
         //System.out.println(jsonPath);
         return parsePath(jsonPath);
     }
     
-    public static Double getRoadDistance(String start, String end) throws MalformedURLException, IOException, JSONException
+    public static Double getRoadDistance(String start, String end) throws MalformedURLException, IOException, JSONException, InterruptedException
     {
-        String url = "http://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
+    	Thread.sleep(300);
+    	
+    	String url = "http://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 
         
         //Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));
@@ -159,10 +178,18 @@ public class Direction {
         //add request header
         con.setRequestProperty("User-Agent", USER_AGENT);
 
-        int responseCode = con.getResponseCode();
-        
+        int responseCode = 0;
+        responseCode = con.getResponseCode();
+      // Thread.sleep(200);
+        while(responseCode == 0){   
+        	//System.out.println("Response Code : " + responseCode);
+        	//Thread.sleep(100);
+        }
+       
+       // System.out.println("FINAL Response Code : " + responseCode);
         BufferedReader in = new BufferedReader(
         new InputStreamReader(con.getInputStream()));
+       
         String inputLine;
         StringBuffer response = new StringBuffer();
 
@@ -175,10 +202,10 @@ public class Direction {
         return parseDistance(jsonPath);
     }
     
-    public static void main(String[] args) throws MalformedURLException, IOException, JSONException{
+    public static void main(String[] args) throws MalformedURLException, IOException, JSONException, InterruptedException{
     	Direction obj = new Direction();
     	obj.getPath("461 25th Ave, San Francisco, CA 94121, USA", "Los Gatos, CA, USA");
-    	System.out.println("NEW");
+    	//System.out.println("NEW");
     	//System.out.println(obj.getRoadDistance("San Mateo", "100 Oracle Parkway, Redwood Shores, CA - 94064"));
     	//System.out.println(obj.getCoordinates("100 Oracle Parkway, Redwood Shores, CA - 94065"));
     	

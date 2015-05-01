@@ -456,7 +456,7 @@ public class DbUtil {
                 cstmt.setDouble(1, g_id);
                 cstmt.setDouble(2, emp_id);
                 cstmt.executeUpdate();
-
+                conn.commit();
                 conn.close(); 
                 
                 //assignEmployee(emp);
@@ -495,6 +495,7 @@ public class DbUtil {
              
                 cstmt.executeUpdate();
                 Double id = cstmt.getDouble(1);
+                conn.commit(); 
                 conn.close(); 
             return  id;
             //assignEmployee(emp);
@@ -518,7 +519,7 @@ public class DbUtil {
 			if(conn == null)
 			{
 				conn = DriverManager.getConnection(
-						"jdbc:oracle:thin:@192.168.43.150:1521:XE", "commute",
+						"jdbc:oracle:thin:@192.168.2.34:1521:XE", "commute",
 						"Welcome1");
 			}
 			
@@ -531,7 +532,7 @@ public class DbUtil {
 		} 
 		
 		if (conn != null) {
-			System.out.println("You made it, take control your database now!");
+			//System.out.println("You made it, take control your database now!");
 		} else {
 			System.out.println("Failed to make connection!");
 		}
@@ -585,6 +586,7 @@ public class DbUtil {
             {
                 Employee emp = new Employee();
                 emp.setUsername(rs.getString("username"));
+                emp.setId(rs.getDouble("emp_id"));
                 emp.setPassword(rs.getString("passwd"));
                 emp.setCoordx(rs.getDouble("coordx"));
                 emp.setCoordy(rs.getDouble("coordy"));

@@ -72,7 +72,7 @@ public class Group
 	
         //this function assigns a group to this employee
         
-	public void assignEmployee(Employee emp) throws MalformedURLException, IOException, JSONException {
+	public void assignEmployee(Employee emp) throws MalformedURLException, IOException, JSONException, InterruptedException {
             DbUtil dbUtl = new DbUtil();
             Path objPath = new Path();
             Util utl  = new Util();
@@ -83,11 +83,14 @@ public class Group
             if(isDriver)
             {
                 // emp == driver...Find all singletons and create new group
+            	//emp.setIs_assigned_grp(true);
+            	//dbUtl.updateEmployee(emp);
                 List<Employee> empList = dbUtl.getAllEmpNotAssigned();
                 List<Employee> intersectingRiders = new LinkedList<Employee>();
+                
                 for(Employee rider : empList)
                 {
-                    if(rider.getId() == emp.getId()) continue;
+                    if(rider.getUsername().equals(emp.getUsername())) continue;
                     
                     if( intersectingRiders.size() > 3)
                     {
@@ -96,7 +99,7 @@ public class Group
                     
                     if(isIntersect(emp, new Point(rider.getCoordx(), rider.getCoordy())))
                     {
-                        intersectingRiders.add(emp);
+                        intersectingRiders.add(rider);
                     }
                 }
                 if(intersectingRiders.size() != 0)
@@ -123,7 +126,8 @@ public class Group
                     }
                     
                     dbUtl.insertGroup(new_g_Id, emp.getId());
-                    
+                  emp.setIs_assigned_grp(true);
+                	dbUtl.updateEmployee(emp);
                     try
                     {
                         //table update
@@ -132,7 +136,7 @@ public class Group
                        // grp.setPath(objPath.findPath(new Integer(new_g_Id.intValue())));
                        // dbUtl.updateGroup(grp);
                         String path = objPath.findPath(new Integer(new_g_Id.intValue()));
-                        System.out.println("new Path: "+ path);
+                        //System.out.println("new Path: "+ path);
                         dbUtl.writePath(new_g_Id.intValue(), objPath.findPath(new Integer(new_g_Id.intValue())));
                         // Update more tables
                     }catch (Exception e)
@@ -244,15 +248,16 @@ public class Group
             }
             
             Integer candidateGroupIdIndex = Util.getBestCandidate(paths, groupIds, candidateIds, home);
-            Integer candidateGroupId =  groupIds.get(candidateGroupIdIndex);
-            System.out.println("candidateGroupId:- " + candidateGroupId) ;
+             
+           // System.out.println("candidateGroupId:- " + candidateGroupId) ;
             
-            if(candidateGroupId != -1)
+            if(candidateGroupIdIndex != -1)
             {
                 try
                 {
                     //table update
                     //u
+                	Integer candidateGroupId =  groupIds.get(candidateGroupIdIndex);
                     dbUtl.writePath(candidateGroupId, objPath.findPath(candidateGroupId));
                     emp.setIs_assigned_grp(true);
                     dbUtl.insertGroup(candidateGroupId.doubleValue(), emp.getId());
@@ -267,7 +272,7 @@ public class Group
             {
                 //form new group if driver can't get riders and any driver for himself
                 if(emp.isIs_driver()) {
-                    System.out.println("Creating new group for the driver:- " + candidateGroupId) ;
+                    
                     
                     Group newStandaloneGrp = new Group();
                     
@@ -323,7 +328,7 @@ public class Group
         
         
                 
-        public void removeEmployeeFromGroup(Employee emp) throws MalformedURLException, IOException, JSONException{
+        public void removeEmployeeFromGroup(Employee emp) throws MalformedURLException, IOException, JSONException, InterruptedException{
         	Double empId = emp.getId();
         	emp.setIs_assigned_grp(false);
         	DbUtil obj = new DbUtil();
@@ -359,7 +364,7 @@ public class Group
             emp.setIs_assigned_grp(false);
         	
         	Group g= new Group();
-        	g.removeEmployeeFromGroup(emp);
+        	//g.removeEmployeeFromGroup(emp);
         	
         }
         
