@@ -66,6 +66,12 @@ public class DbUtil {
 				"  commute_employee.retrieveEmployees (                 \n"   +
 				"  		o_employees => ?); \n" +
 				 "END; ";
+        
+        String GET_EMPLOYEE = "BEGIN  \n" +
+                            "  commute_employee.getEmployee (                 \n"   +
+                            "               o_employee => ?,                                      \n"   +
+                            "               i_username => ?); \n" +
+                             "END; ";
 	
 	String GET_GROUP_EMPLOYEE_LOCATIONS = "BEGIN                                                         \n"   +
 		      "  commute_employee.get_grp_empl_locations (                 \n"   +
@@ -74,7 +80,7 @@ public class DbUtil {
 		      "END; ";
 	
 	String WRITE_PATH = "BEGIN                                                         \n"   +
-		      "  commute_employee.get_grp_empl_locations (                 \n"   +
+		      "  commute_employee.write_path (                 \n"   +
 		      "     i_group_id => ?,                                                \n"   +
 		      "     i_path => ?);                                     \n"   +
 		      "END; ";
@@ -126,6 +132,49 @@ public class DbUtil {
 	 }
 		
 	}
+        
+        
+    public Employee getEmployee(String username)
+    {
+            
+            Employee emp = new Employee();
+             try {
+                     Connection conn = null;  
+                     conn = this.getConnection();
+                     OracleCallableStatement cstmt = (OracleCallableStatement) conn.prepareCall(GET_EMPLOYEE);
+                     cstmt.registerOutParameter(1, OracleTypes.CURSOR);
+                     cstmt.setString(2, username);
+                     cstmt.execute();
+                     OracleResultSet rs = (OracleResultSet)cstmt.getCursor(1);
+                     while (rs.next()) {
+                                    
+                             emp.setId(Double.valueOf(rs.getString("emp_id")));
+                             emp.setUsername(rs.getString("username"));
+                             emp.setPassword(rs.getString("passwd"));
+                             emp.setCoordx(rs.getDouble("coordx"));
+                             emp.setCoordy(rs.getDouble("coordy"));
+                             emp.setEmail(rs.getString("email"));
+                             emp.setAddress(rs.getString("address"));
+                             emp.setHome_departure(rs.getTimestamp("home_departure"));
+                             emp.setOffice_departure(rs.getTimestamp("office_departure"));
+                             emp.setIs_driver("Y".equals(rs.getString("is_driver"))? true:false);
+                             emp.setPhone(rs.getDouble("phno"));
+                             emp.setName(rs.getString("name"));
+                             emp.setIs_assigned_grp("Y".equals(rs.getString("is_grp_assigned"))? true:false);
+
+                    }
+                     
+                     
+                     
+            } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+            }
+             
+            return emp;
+            
+    }
+        
         public List<Group> getAllGroup()
         {
             String RETRIEVE_PATHS = "BEGIN                      \n" +

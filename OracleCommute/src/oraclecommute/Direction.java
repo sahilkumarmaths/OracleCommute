@@ -142,7 +142,7 @@ public class Direction {
     
     public static Double getRoadDistance(String start, String end) throws MalformedURLException, IOException, JSONException
     {
-        String url = "https://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
+        String url = "http://maps.googleapis.com/maps/api/directions/json?origin="+URLEncoder.encode(start)+"&destination="+URLEncoder.encode(end);
 
         
         //Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress("www-proxy.us.oracle.com", 80));

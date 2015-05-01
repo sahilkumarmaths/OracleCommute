@@ -60,11 +60,11 @@ BEGIN
 
 END;
 
-procedure getEmployee(o_employee OUT NOCOPY SYS_REFCURSOR, i_emp_id NUMBER)
+procedure getEmployee(o_employee OUT NOCOPY SYS_REFCURSOR, i_username NUMBER)
 IS
 BEGIN
 	open o_employee FOR
-		select * from employee where emp_id = i_emp_id ;
+		select * from employee where username = i_username ;
 
 END;
 

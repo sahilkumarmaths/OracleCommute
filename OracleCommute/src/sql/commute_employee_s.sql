@@ -23,6 +23,8 @@ procedure createEmployee(i_username varchar2,
 			 i_is_driver 	  varchar2,
                          is_grp_assigned  varchar2);
                          
+procedure getEmployee(o_employee OUT NOCOPY SYS_REFCURSOR, i_username NUMBER);
+                         
 procedure getGroup(o_group OUT NOCOPY SYS_REFCURSOR, i_grp_id NUMBER);
 
 procedure updateEmployee(i_emp_id     number,
@@ -73,5 +75,7 @@ procedure updateGroupAttr(i_group_id NUMBER, i_path varchar2, i_start_time TIMES
 		       
 end;
 /
+
 commit;
+
 show errors;

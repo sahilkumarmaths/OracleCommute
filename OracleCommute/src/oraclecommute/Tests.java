@@ -20,7 +20,7 @@ public class Tests {
         
         DbUtil dbUtil = new DbUtil();
 
-        Employee emp = new Employee();
+ /*       Employee emp = new Employee();
         emp.setId(4.0);
         emp.setAddress("744 Edgewater Blvd, Apt 200, Foster City, CA 94404");
         emp.setCoordx(37.55);
@@ -34,7 +34,7 @@ public class Tests {
         emp.setName("Virendra ff");
         emp.setEmail("dd@gmail.com");
         emp.setIs_assigned_grp(false);
-        emp.setIs_driver(true);
+        emp.setIs_driver(true);*/
         
     //    dbUtil.createEmployee(emp);
         
@@ -53,9 +53,12 @@ public class Tests {
         }*/
 
      //     dbUtil.updateEmployee(emp);
-        
+
+      Employee emp = dbUtil.getEmployee("157340");
+      System.out.println(emp.getName());
+
      // dbUtil.getAllEmpNotAssigned();
-        Group gp = new Group();
+ /*       Group gp = new Group();
 
 
        try {
@@ -63,7 +66,7 @@ public class Tests {
         } catch (MalformedURLException e) {
         } catch (IOException e) {
         } catch (JSONException e) {
-        }
+        }*/
     }
     
     

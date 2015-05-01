@@ -134,6 +134,11 @@ public class Group
                     {
                         //table update
                         //findPath ...should also update the driver
+                       // grp.setG_id(new_g_Id);
+                       // grp.setPath(objPath.findPath(new Integer(new_g_Id.intValue())));
+                       // dbUtl.updateGroup(grp);
+                        String path = objPath.findPath(new Integer(new_g_Id.intValue()));
+                        System.out.println("new Path: "+ path);
                         dbUtl.writePath(new_g_Id.intValue(), objPath.findPath(new Integer(new_g_Id.intValue())));
                         // Update more tables
                     }catch (Exception e)
